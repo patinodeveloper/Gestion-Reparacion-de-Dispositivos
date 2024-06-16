@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 /**
@@ -35,6 +36,8 @@ public class FormMain extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnDevices = new javax.swing.JButton();
         btnRepairHistory = new javax.swing.JButton();
+        btnPayments = new javax.swing.JButton();
+        btnSettings = new javax.swing.JButton();
         jplHeader = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -110,8 +113,23 @@ public class FormMain extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblDevices = new javax.swing.JTable();
         jplRepHistory = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        jplPayments = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
+        jLabel31 = new javax.swing.JLabel();
+        txtIdRepPayment = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        btnSavePayment = new javax.swing.JButton();
+        btnUpdatePayment = new javax.swing.JButton();
+        btnDeletePayment = new javax.swing.JButton();
+        btnCleanPayment = new javax.swing.JButton();
+        jdDatePay = new com.toedter.calendar.JDateChooser();
+        btnAmountPay = new javax.swing.JTextField();
+        jLabel34 = new javax.swing.JLabel();
+        cbxPaymentMethod = new javax.swing.JComboBox<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tblPayments = new javax.swing.JTable();
+        jplSettings = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -120,7 +138,7 @@ public class FormMain extends javax.swing.JFrame {
 
         jplMenu.setBackground(new java.awt.Color(45, 50, 80));
 
-        btnRegister.setBackground(new java.awt.Color(249, 177, 122));
+        btnRegister.setBackground(new java.awt.Color(255, 255, 255));
         btnRegister.setFont(new java.awt.Font("Raleway SemiBold", 1, 18)); // NOI18N
         btnRegister.setForeground(new java.awt.Color(51, 51, 51));
         btnRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/register-32px.png"))); // NOI18N
@@ -173,6 +191,30 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
+        btnPayments.setBackground(new java.awt.Color(249, 177, 122));
+        btnPayments.setFont(new java.awt.Font("Raleway SemiBold", 1, 18)); // NOI18N
+        btnPayments.setForeground(new java.awt.Color(51, 51, 51));
+        btnPayments.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pagos-32px.png"))); // NOI18N
+        btnPayments.setText("Pagos");
+        btnPayments.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPayments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPaymentsActionPerformed(evt);
+            }
+        });
+
+        btnSettings.setBackground(new java.awt.Color(249, 177, 122));
+        btnSettings.setFont(new java.awt.Font("Raleway SemiBold", 1, 18)); // NOI18N
+        btnSettings.setForeground(new java.awt.Color(51, 51, 51));
+        btnSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ajustes-32px.png"))); // NOI18N
+        btnSettings.setText("Configuración");
+        btnSettings.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSettingsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jplMenuLayout = new javax.swing.GroupLayout(jplMenu);
         jplMenu.setLayout(jplMenuLayout);
         jplMenuLayout.setHorizontalGroup(
@@ -185,6 +227,8 @@ public class FormMain extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(49, Short.MAX_VALUE))
             .addComponent(btnRepairHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnPayments, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jplMenuLayout.setVerticalGroup(
             jplMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,6 +243,10 @@ public class FormMain extends javax.swing.JFrame {
                 .addComponent(btnDevices, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRepairHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -608,11 +656,11 @@ public class FormMain extends javax.swing.JFrame {
         jplClientsLayout.setHorizontalGroup(
             jplClientsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jplClientsLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(26, 26, 26)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jplClientsLayout.setVerticalGroup(
             jplClientsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -871,31 +919,186 @@ public class FormMain extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("tab4", jplRepHistory);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
-        );
+        jplPayments.setBackground(new java.awt.Color(103, 111, 157));
 
-        jTabbedPane1.addTab("tab5", jPanel2);
+        jPanel5.setBackground(new java.awt.Color(103, 111, 125));
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pagos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel5.setForeground(new java.awt.Color(255, 255, 255));
+
+        jLabel31.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel31.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel31.setText("Id Reparación:");
+
+        txtIdRepPayment.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdRepPaymentKeyTyped(evt);
+            }
+        });
+
+        jLabel32.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel32.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel32.setText("Fecha de Pago:");
+
+        jLabel33.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel33.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel33.setText("Monto:");
+
+        btnSavePayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save-24px.png"))); // NOI18N
+        btnSavePayment.setText("GUARDAR");
+        btnSavePayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        btnUpdatePayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/update-16px.png"))); // NOI18N
+        btnUpdatePayment.setText("ACTUALIZAR");
+        btnUpdatePayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        btnDeletePayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete-24px.png"))); // NOI18N
+        btnDeletePayment.setText("ELIMINAR");
+        btnDeletePayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        btnCleanPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove-24px.png"))); // NOI18N
+        btnCleanPayment.setText("LIMPIAR");
+        btnCleanPayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCleanPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCleanPaymentActionPerformed(evt);
+            }
+        });
+
+        btnAmountPay.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                btnAmountPayKeyTyped(evt);
+            }
+        });
+
+        jLabel34.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel34.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel34.setText("Método de Pago:");
+
+        cbxPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(btnDeletePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCleanPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel31)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtIdRepPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(150, 150, 150))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel32)
+                        .addGap(18, 18, 18)
+                        .addComponent(jdDatePay, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAmountPay))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnSavePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdatePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdRepPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jdDatePay, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(jLabel32, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAmountPay, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnUpdatePayment)
+                    .addComponent(btnSavePayment))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCleanPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeletePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10))
+        );
+
+        tblPayments.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Id", "Id Reparación", "Monto", "Fecha de Pago", "Método de Pago"
+            }
+        ));
+        tblPayments.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPaymentsMouseClicked(evt);
+            }
+        });
+        jScrollPane7.setViewportView(tblPayments);
+        if (tblPayments.getColumnModel().getColumnCount() > 0) {
+            tblPayments.getColumnModel().getColumn(0).setPreferredWidth(5);
+        }
+
+        javax.swing.GroupLayout jplPaymentsLayout = new javax.swing.GroupLayout(jplPayments);
+        jplPayments.setLayout(jplPaymentsLayout);
+        jplPaymentsLayout.setHorizontalGroup(
+            jplPaymentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jplPaymentsLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+        jplPaymentsLayout.setVerticalGroup(
+            jplPaymentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jplPaymentsLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(jplPaymentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("tab5", jplPayments);
+
+        javax.swing.GroupLayout jplSettingsLayout = new javax.swing.GroupLayout(jplSettings);
+        jplSettings.setLayout(jplSettingsLayout);
+        jplSettingsLayout.setHorizontalGroup(
+            jplSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        jplSettingsLayout.setVerticalGroup(
+            jplSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 417, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab6", jPanel5);
+        jTabbedPane1.addTab("tab6", jplSettings);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -921,14 +1124,32 @@ public class FormMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    Color MainBtns = new Color(249, 177, 122);
+
     private void btnClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientsActionPerformed
         jTabbedPane1.setSelectedIndex(1);
+
+        btnClients.setBackground(Color.WHITE);
+        btnRegister.setBackground(MainBtns);
+        btnDevices.setBackground(MainBtns);
+        btnRepairHistory.setBackground(MainBtns);
+        btnSettings.setBackground(MainBtns);
+        btnPayments.setBackground(MainBtns);
+        
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
     }//GEN-LAST:event_btnClientsActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         jTabbedPane1.setSelectedIndex(0);
+
+        btnRegister.setBackground(Color.WHITE);
+        
+        btnClients.setBackground(MainBtns);
+        btnDevices.setBackground(MainBtns);
+        btnRepairHistory.setBackground(MainBtns);
+        btnSettings.setBackground(MainBtns);
+        btnPayments.setBackground(MainBtns);
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void txtNameClientKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameClientKeyTyped
@@ -945,10 +1166,19 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveClient.setEnabled(true);
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
+        
     }//GEN-LAST:event_btnCleanClientActionPerformed
 
     private void btnDevicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevicesActionPerformed
         jTabbedPane1.setSelectedIndex(2);
+
+        btnDevices.setBackground(Color.WHITE);
+        
+        btnRegister.setBackground(MainBtns);
+        btnClients.setBackground(MainBtns);
+        btnRepairHistory.setBackground(MainBtns);
+        btnSettings.setBackground(MainBtns);
+        btnPayments.setBackground(MainBtns);
     }//GEN-LAST:event_btnDevicesActionPerformed
 
     private void txtModelDeviceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtModelDeviceKeyTyped
@@ -981,7 +1211,14 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCleanDeviceActionPerformed
 
     private void btnRepairHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepairHistoryActionPerformed
-        // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(3);
+        
+        btnRepairHistory.setBackground(Color.WHITE);
+        btnRegister.setBackground(MainBtns);
+        btnClients.setBackground(MainBtns);
+        btnDevices.setBackground(MainBtns);
+        btnSettings.setBackground(MainBtns);
+        btnPayments.setBackground(MainBtns);
     }//GEN-LAST:event_btnRepairHistoryActionPerformed
 
     private void txtIdDevRepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdDevRepKeyTyped
@@ -991,6 +1228,46 @@ public class FormMain extends javax.swing.JFrame {
     private void btnCleanRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanRepActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCleanRepActionPerformed
+
+    private void btnPaymentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentsActionPerformed
+        jTabbedPane1.setSelectedIndex(4);
+        
+        btnPayments.setBackground(Color.WHITE);
+        
+        btnRegister.setBackground(MainBtns);
+        btnClients.setBackground(MainBtns);
+        btnDevices.setBackground(MainBtns);
+        btnRepairHistory.setBackground(MainBtns);
+        btnSettings.setBackground(MainBtns);
+    }//GEN-LAST:event_btnPaymentsActionPerformed
+
+    private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
+        jTabbedPane1.setSelectedIndex(5);
+        
+        btnSettings.setBackground(Color.WHITE);
+        
+        btnRegister.setBackground(MainBtns);
+        btnClients.setBackground(MainBtns);
+        btnDevices.setBackground(MainBtns);
+        btnRepairHistory.setBackground(MainBtns);
+        btnPayments.setBackground(MainBtns);
+    }//GEN-LAST:event_btnSettingsActionPerformed
+
+    private void txtIdRepPaymentKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdRepPaymentKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdRepPaymentKeyTyped
+
+    private void btnCleanPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanPaymentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCleanPaymentActionPerformed
+
+    private void tblPaymentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaymentsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblPaymentsMouseClicked
+
+    private void btnAmountPayKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAmountPayKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAmountPayKeyTyped
 
     /**
      * @param args the command line arguments
@@ -1028,27 +1305,35 @@ public class FormMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField btnAmountPay;
     private javax.swing.JButton btnCleanClient;
     private javax.swing.JButton btnCleanDevice;
+    private javax.swing.JButton btnCleanPayment;
     private javax.swing.JButton btnCleanRep;
     private javax.swing.JButton btnClients;
     private javax.swing.JButton btnCompleteRep;
     private javax.swing.JButton btnDeleteClient;
     private javax.swing.JButton btnDeleteDevice;
+    private javax.swing.JButton btnDeletePayment;
     private javax.swing.JButton btnDeleteRep;
     private javax.swing.JButton btnDevices;
     private javax.swing.JButton btnFinalize;
+    private javax.swing.JButton btnPayments;
     private javax.swing.JButton btnPendingRep;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnRepairHistory;
     private javax.swing.JButton btnSaveClient;
     private javax.swing.JButton btnSaveDevice;
+    private javax.swing.JButton btnSavePayment;
     private javax.swing.JButton btnSaveRep;
+    private javax.swing.JButton btnSettings;
     private javax.swing.JButton btnSuccessRep;
     private javax.swing.JButton btnUpdateClient;
     private javax.swing.JButton btnUpdateDevice;
+    private javax.swing.JButton btnUpdatePayment;
     private javax.swing.JButton btnUpdateRep;
     private javax.swing.JComboBox<String> cbxEstadoRepair;
+    private javax.swing.JComboBox<String> cbxPaymentMethod;
     private javax.swing.JComboBox<String> cbxTypeDev;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
@@ -1071,7 +1356,10 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1081,6 +1369,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -1088,19 +1377,24 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private com.toedter.calendar.JDateChooser jdDatePay;
     private com.toedter.calendar.JDateChooser jdFechaRecibo;
     private javax.swing.JPanel jplClients;
     private javax.swing.JPanel jplDevices;
     private javax.swing.JPanel jplHeader;
     private javax.swing.JPanel jplMenu;
+    private javax.swing.JPanel jplPayments;
     private javax.swing.JPanel jplRegister;
     private javax.swing.JPanel jplRepHistory;
+    private javax.swing.JPanel jplSettings;
     private javax.swing.JTable tblClients;
     private javax.swing.JTable tblDevices;
+    private javax.swing.JTable tblPayments;
     private javax.swing.JTable tblRepairs;
     private javax.swing.JTextField txtDevBrand;
     private javax.swing.JTextField txtIdClientDev;
     private javax.swing.JTextField txtIdDevRep;
+    private javax.swing.JTextField txtIdRepPayment;
     private javax.swing.JTextField txtModelDevice;
     private javax.swing.JTextField txtNameClient;
     private javax.swing.JTextField txtNameClientDev;
