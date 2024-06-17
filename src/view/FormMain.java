@@ -7,6 +7,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import model.classes.User;
 
 /**
  *
@@ -19,6 +20,11 @@ public class FormMain extends javax.swing.JFrame {
      */
     public FormMain() {
         initComponents();
+    }
+    
+    public FormMain(User user) {
+        initComponents();
+        lblUser.setText(user.getName());
     }
 
     /**
@@ -33,7 +39,7 @@ public class FormMain extends javax.swing.JFrame {
         jplMenu = new javax.swing.JPanel();
         btnRegister = new javax.swing.JButton();
         btnClients = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
         btnDevices = new javax.swing.JButton();
         btnRepairHistory = new javax.swing.JButton();
         btnPayments = new javax.swing.JButton();
@@ -172,10 +178,10 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Usuario");
+        lblUser.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblUser.setForeground(new java.awt.Color(255, 255, 255));
+        lblUser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblUser.setText("Usuario");
 
         btnDevices.setBackground(new java.awt.Color(249, 177, 122));
         btnDevices.setFont(new java.awt.Font("Raleway SemiBold", 1, 18)); // NOI18N
@@ -234,7 +240,7 @@ public class FormMain extends javax.swing.JFrame {
             .addComponent(btnRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jplMenuLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(49, Short.MAX_VALUE))
             .addComponent(btnRepairHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnPayments, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -244,7 +250,7 @@ public class FormMain extends javax.swing.JFrame {
             jplMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jplMenuLayout.createSequentialGroup()
                 .addGap(155, 155, 155)
-                .addComponent(jLabel2)
+                .addComponent(lblUser)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1242,7 +1248,7 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientsActionPerformed
         jTabbedPane1.setSelectedIndex(1);
-
+        
         btnClients.setBackground(Color.WHITE);
         btnRegister.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
@@ -1256,7 +1262,7 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         jTabbedPane1.setSelectedIndex(0);
-
+        
         btnRegister.setBackground(Color.WHITE);
         
         btnClients.setBackground(MainBtns);
@@ -1280,12 +1286,12 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveClient.setEnabled(true);
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
-        
+
     }//GEN-LAST:event_btnCleanClientActionPerformed
 
     private void btnDevicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevicesActionPerformed
         jTabbedPane1.setSelectedIndex(2);
-
+        
         btnDevices.setBackground(Color.WHITE);
         
         btnRegister.setBackground(MainBtns);
@@ -1463,7 +1469,6 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1513,6 +1518,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JPanel jplRegister;
     private javax.swing.JPanel jplRepHistory;
     private javax.swing.JPanel jplSettings;
+    private javax.swing.JLabel lblUser;
     private javax.swing.JTable tblClients;
     private javax.swing.JTable tblDevices;
     private javax.swing.JTable tblPayments;

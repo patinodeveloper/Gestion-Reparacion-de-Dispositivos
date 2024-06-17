@@ -5,24 +5,48 @@
  */
 package view;
 
+import controller.events.Messages;
+import javax.swing.JOptionPane;
+import model.UserDAO;
+import model.classes.User;
+
 /**
  *
  * @author Antonio
  */
 public class FormLogin extends javax.swing.JFrame {
 
+    User userLog = new User();
+    UserDAO login = new UserDAO();
+    private final Messages msg = new Messages();
+
     public FormLogin() {
         initComponents();
     }
 
-    
-    
+    public void validar() {
+        String email = txtEmail.getText();
+        String pass = String.valueOf(txtPass.getPassword());
+        System.out.println("em" + email + " pass" + pass);
+        if (!"".equals(email) || !"".equals(pass)) {
+            userLog = login.log(email, pass);
+            if (userLog.getEmail() != null && userLog.getPassword() != null) {
+                msg.successfulMessage("Bienvenido! " + userLog.getName(), "Inicio de Sesión");
+                FormMain main = new FormMain(userLog);
+                main.setVisible(true);
+                dispose();
+            } else {
+                msg.errorMessage("Correo o la Contraseña incorrecta", "Inicio de Sesión");
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jplLogin = new javax.swing.JPanel();
-        txtUser = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
         txtPass = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -38,16 +62,16 @@ public class FormLogin extends javax.swing.JFrame {
 
         jplLogin.setBackground(new java.awt.Color(66, 71, 105));
 
-        txtUser.setBackground(new java.awt.Color(103, 111, 157));
-        txtUser.setFont(new java.awt.Font("Raleway Medium", 0, 14)); // NOI18N
-        txtUser.setForeground(new java.awt.Color(255, 255, 255));
-        txtUser.setText("usuario@gmail.com");
-        txtUser.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtEmail.setBackground(new java.awt.Color(103, 111, 157));
+        txtEmail.setFont(new java.awt.Font("Raleway Medium", 0, 14)); // NOI18N
+        txtEmail.setForeground(new java.awt.Color(255, 255, 255));
+        txtEmail.setText("patino10@gmail.com");
+        txtEmail.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         txtPass.setBackground(new java.awt.Color(103, 111, 157));
         txtPass.setFont(new java.awt.Font("Raleway Medium", 0, 14)); // NOI18N
         txtPass.setForeground(new java.awt.Color(255, 255, 255));
-        txtPass.setText("jPasswordField1");
+        txtPass.setText("root");
         txtPass.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         jLabel1.setFont(new java.awt.Font("Raleway SemiBold", 1, 36)); // NOI18N
@@ -88,7 +112,7 @@ public class FormLogin extends javax.swing.JFrame {
                 .addContainerGap(108, Short.MAX_VALUE)
                 .addGroup(jplLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jplLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                        .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                         .addComponent(txtPass, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -108,7 +132,7 @@ public class FormLogin extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -150,8 +174,7 @@ public class FormLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        this.dispose();
-        new FormMain().setVisible(true);
+        validar();
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     /**
@@ -198,7 +221,7 @@ public class FormLogin extends javax.swing.JFrame {
     private javax.swing.JPanel jplImg;
     private javax.swing.JPanel jplLogin;
     private javax.swing.JLabel lblImg;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPass;
-    private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }
