@@ -62,7 +62,7 @@ public class ClientCtrl {
     public void deleteClient(int id) {
         boolean exito = clientDAO.deleteClient(id);
         if (exito) {
-            msg.successfulMessage("Cliente eliminado exitosamente", "Eliminar Cliente");
+            msg.successfulMessage("Cliente y sus dispositivos eliminados exitosamente", "Eliminar Cliente");
         } else {
             msg.errorMessage("Error al intentar eliminar el cliente", "Eliminar Cliente");
         }

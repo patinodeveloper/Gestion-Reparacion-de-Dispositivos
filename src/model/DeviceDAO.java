@@ -137,6 +137,7 @@ public class DeviceDAO {
     public boolean deleteDevice(int id) {
         String sql = "DELETE FROM dispositivos WHERE id_dispositivo = ?";
         try {
+            con = cn.getConnectDB();
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             ps.execute();

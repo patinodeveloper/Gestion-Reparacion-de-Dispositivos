@@ -5,6 +5,7 @@
  */
 package model;
 
+import controller.events.Messages;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,7 @@ import model.classes.Client;
  */
 public class ClientDAO {
 
+    private Messages msg = new Messages();
     SQLConnection cn = new SQLConnection();
     Connection con;
     PreparedStatement ps;
@@ -92,20 +94,55 @@ public class ClientDAO {
     }
 
     public boolean deleteClient(int id) {
-        String sql = "DELETE FROM clientes WHERE id_cliente = ?";
+        String deleteDevicesSQL = "DELETE FROM dispositivos WHERE id_cliente = ?";
+        String deleteClientSQL = "DELETE FROM clientes WHERE id_cliente = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+
         try {
-            ps = con.prepareStatement(sql);
+            con = cn.getConnectDB();
+            // Crear transacción
+            con.setAutoCommit(false);
+
+            // Eliminar dispositivos relacionados
+            ps = con.prepareStatement(deleteDevicesSQL);
             ps.setInt(1, id);
-            ps.execute();
+            ps.executeUpdate();
+            ps.close();
+
+            // Eliminar cliente
+            ps = con.prepareStatement(deleteClientSQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+            // Confirmar transacción
+            con.commit();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.toString());
+            msg.errorMessage("SQL Error: " + e.toString(), "Eliminar Cliente");
+            if (con != null) {
+                try {
+                    con.rollback(); // Deshacer cambios si hay un error
+                } catch (SQLException ex) {
+                    msg.errorMessage("Rollback Error: " + ex.toString(), "Eliminar Cliente");
+                }
+            }
             return false;
         } finally {
-            try {
-                con.close();
-            } catch (SQLException ex) {
-                System.out.println(ex.toString());
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    msg.errorMessage("Statement Closing Error: " + e.toString(), "Eliminar Cliente");
+                }
+            }
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true); // Restaurar el estado de autocommit
+                    con.close();
+                } catch (SQLException e) {
+                    msg.errorMessage("Connection Closing Error: " + e.toString(), "Eliminar Cliente");
+                }
             }
         }
     }

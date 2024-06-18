@@ -64,6 +64,15 @@ public class DeviceCtrl {
         }
     }
 
+    public void deleteDevice(int id) {
+        boolean isDeleted = deviceDAO.deleteDevice(id);
+        if (isDeleted) {
+            msg.successfulMessage("Dispositivo eliminado correctamente", "Eliminar Dispositivo");
+        } else {
+            msg.errorMessage("Error al intentar eliminar este dispositivo", "Eliminar Dispositivo");
+        }
+    }
+
     public Device searchIdCtrl(int id) {
         Device dv = new Device();
         dv = deviceDAO.searchId(id);

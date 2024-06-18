@@ -1497,6 +1497,9 @@
                       <Color id="Hand Cursor"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteDeviceActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnCleanDevice">
                   <Properties>
@@ -2096,7 +2099,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNameClient1">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="JesMedellin"/>
+                    <Property name="text" type="java.lang.String" value="C&#xf3;digo en Desarrollo"/>
                   </Properties>
                   <Events>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNameClient1KeyTyped"/>
