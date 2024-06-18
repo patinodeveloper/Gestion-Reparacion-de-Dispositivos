@@ -25,14 +25,14 @@ public class ClientDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    public boolean RegistrarCliente(Client cl) {
+    public boolean insertClient(Client cl) {
         String sql = "INSERT INTO clientes (nombre, telefono, direccion) VALUES (?,?,?)";
         try {
             con = cn.getConnectDB();
             ps = con.prepareStatement(sql);
-            ps.setString(2, cl.getName());
-            ps.setString(3, cl.getPhone());
-            ps.setString(4, cl.getAddress());
+            ps.setString(1, cl.getName());
+            ps.setString(2, cl.getPhone());
+            ps.setString(3, cl.getAddress());
             ps.execute();
             return true;
         } catch (SQLException e) {
@@ -47,7 +47,7 @@ public class ClientDAO {
         }
     }
 
-    public List ListarCliente() {
+    public List selectClient() {
         List<Client> ListaCl = new ArrayList();
         String sql = "SELECT * FROM clientes";
         try {
@@ -56,7 +56,7 @@ public class ClientDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Client cl = new Client();
-                cl.setId(rs.getInt("id"));
+                cl.setId(rs.getInt("id_cliente"));
                 cl.setName(rs.getString("nombre"));
                 cl.setPhone(rs.getString("telefono"));
                 cl.setAddress(rs.getString("direccion"));
@@ -68,14 +68,15 @@ public class ClientDAO {
         return ListaCl;
     }
 
-    public boolean ModificarCliente(Client cl) {
-        String sql = "UPDATE clientes SET nombre=?, telefono=?, direccion=? WHERE id=?";
+    public boolean updateClient(Client cl) {
+        String sql = "UPDATE clientes SET nombre=?, telefono=?, direccion=? WHERE id_cliente=?";
         try {
+            con = cn.getConnectDB();
             ps = con.prepareStatement(sql);
-            ps.setString(2, cl.getName());
-            ps.setString(3, cl.getPhone());
-            ps.setString(4, cl.getAddress());
-            ps.setInt(5, cl.getId());
+            ps.setString(1, cl.getName());
+            ps.setString(2, cl.getPhone());
+            ps.setString(3, cl.getAddress());
+            ps.setInt(4, cl.getId());
             ps.execute();
             return true;
         } catch (SQLException e) {
@@ -90,8 +91,8 @@ public class ClientDAO {
         }
     }
 
-    public boolean EliminarCliente(int id) {
-        String sql = "DELETE FROM clientes WHERE id = ?";
+    public boolean deleteClient(int id) {
+        String sql = "DELETE FROM clientes WHERE id_cliente = ?";
         try {
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
@@ -109,16 +110,16 @@ public class ClientDAO {
         }
     }
 
-    public Client Buscarcliente(int id) {
+    public Client searchClient(int id) {
         Client cl = new Client();
-        String sql = "SELECT * FROM clientes WHERE id = ?";
+        String sql = "SELECT * FROM clientes WHERE id_cliente = ?";
         try {
             con = cn.getConnectDB();
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-                cl.setId(rs.getInt("id"));
+                cl.setId(rs.getInt("id_cliente"));
                 cl.setName(rs.getString("nombre"));
                 cl.setPhone(rs.getString("telefono"));
                 cl.setAddress(rs.getString("direccion"));

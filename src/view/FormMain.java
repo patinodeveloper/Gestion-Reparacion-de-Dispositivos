@@ -5,8 +5,19 @@
  */
 package view;
 
+import controller.ClientCtrl;
+import controller.DeviceCtrl;
+import controller.TypeDeviceCtrl;
+import controller.events.Messages;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import model.classes.Client;
+import model.classes.Combo;
+import model.classes.Device;
+import model.classes.TypeDevice;
 import model.classes.User;
 
 /**
@@ -14,10 +25,17 @@ import model.classes.User;
  * @author Antonio
  */
 public class FormMain extends javax.swing.JFrame {
-
-    /**
-     * Creates new form FormMain
-     */
+    
+    private Client cl = new Client();
+    private ClientCtrl clientCtrl = new ClientCtrl();
+    private Device dv = new Device();
+    private DeviceCtrl deviceCtrl = new DeviceCtrl();
+    private TypeDevice tdv = new TypeDevice();
+    private TypeDeviceCtrl typeDvCtrl = new TypeDeviceCtrl();
+    DefaultTableModel model = new DefaultTableModel();
+    private final Messages msg = new Messages();
+    private List<Integer> idList = new ArrayList();
+    
     public FormMain() {
         initComponents();
     }
@@ -25,6 +43,7 @@ public class FormMain extends javax.swing.JFrame {
     public FormMain(User user) {
         initComponents();
         lblUser.setText(user.getName());
+        txtIdClient.setVisible(false);
     }
 
     /**
@@ -83,25 +102,26 @@ public class FormMain extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         txtNameClient = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        txtNumberClient = new javax.swing.JTextField();
+        txtPhoneClient = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         btnSaveClient = new javax.swing.JButton();
         btnUpdateClient = new javax.swing.JButton();
         btnDeleteClient = new javax.swing.JButton();
         btnCleanClient = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txtAddressClient = new javax.swing.JTextArea();
+        txtIdClient = new javax.swing.JTextField();
         jplDevices = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        txtModelDevice = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
         txtDevBrand = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtModelDevice = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         txtSerieDev = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel17 = new javax.swing.JLabel();
-        txtNumberClient3 = new javax.swing.JTextField();
+        txtColorDev = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         txtIdClientDev = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
@@ -111,11 +131,12 @@ public class FormMain extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtProblemDev = new javax.swing.JTextArea();
         btnSaveDevice = new javax.swing.JButton();
         btnUpdateDevice = new javax.swing.JButton();
         btnDeleteDevice = new javax.swing.JButton();
         btnCleanDevice = new javax.swing.JButton();
+        txtIdDevice = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblDevices = new javax.swing.JTable();
         jplRepHistory = new javax.swing.JPanel();
@@ -149,7 +170,6 @@ public class FormMain extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
-        setMaximumSize(new java.awt.Dimension(1120, 810));
         setResizable(false);
 
         jplMenu.setBackground(new java.awt.Color(45, 50, 80));
@@ -306,6 +326,11 @@ public class FormMain extends javax.swing.JFrame {
                 "Id", "Dispositivo", "Problema", "Servicio", "Costo", "Fecha", "Fecha Entrega", "Estado"
             }
         ));
+        tblRepairs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRepairsMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(tblRepairs);
         if (tblRepairs.getColumnModel().getColumnCount() > 0) {
             tblRepairs.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -360,6 +385,11 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save-24px.png"))); // NOI18N
         btnSaveRep.setText("GUARDAR");
         btnSaveRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSaveRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveRepActionPerformed(evt);
+            }
+        });
 
         btnUpdateRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/update-16px.png"))); // NOI18N
         btnUpdateRep.setText("ACTUALIZAR");
@@ -541,10 +571,7 @@ public class FormMain extends javax.swing.JFrame {
 
         tblClients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Id", "Nombre", "Telefono", "Dirección"
@@ -558,6 +585,9 @@ public class FormMain extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblClients);
         if (tblClients.getColumnModel().getColumnCount() > 0) {
             tblClients.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tblClients.getColumnModel().getColumn(1).setPreferredWidth(80);
+            tblClients.getColumnModel().getColumn(2).setPreferredWidth(20);
+            tblClients.getColumnModel().getColumn(3).setPreferredWidth(120);
         }
 
         jPanel3.setBackground(new java.awt.Color(103, 111, 125));
@@ -585,14 +615,29 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveClient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save-24px.png"))); // NOI18N
         btnSaveClient.setText("GUARDAR");
         btnSaveClient.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSaveClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveClientActionPerformed(evt);
+            }
+        });
 
         btnUpdateClient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/update-16px.png"))); // NOI18N
         btnUpdateClient.setText("ACTUALIZAR");
         btnUpdateClient.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdateClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateClientActionPerformed(evt);
+            }
+        });
 
         btnDeleteClient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete-24px.png"))); // NOI18N
         btnDeleteClient.setText("ELIMINAR");
         btnDeleteClient.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeleteClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteClientActionPerformed(evt);
+            }
+        });
 
         btnCleanClient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove-24px.png"))); // NOI18N
         btnCleanClient.setText("LIMPIAR");
@@ -603,9 +648,9 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
-        jTextArea2.setColumns(3);
-        jTextArea2.setRows(5);
-        jScrollPane4.setViewportView(jTextArea2);
+        txtAddressClient.setColumns(3);
+        txtAddressClient.setRows(5);
+        jScrollPane4.setViewportView(txtAddressClient);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -627,9 +672,13 @@ public class FormMain extends javax.swing.JFrame {
                                 .addGap(20, 20, 20))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel15)
-                                .addGap(18, 18, 18)))
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addGap(35, 35, 35)
+                                .addComponent(txtIdClient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNumberClient, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                            .addComponent(txtPhoneClient, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                             .addComponent(txtNameClient)
                             .addComponent(jScrollPane4)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -647,12 +696,14 @@ public class FormMain extends javax.swing.JFrame {
                     .addComponent(txtNameClient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNumberClient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPhoneClient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
-                        .addComponent(jLabel15))
+                        .addComponent(jLabel15)
+                        .addGap(33, 33, 33)
+                        .addComponent(txtIdClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -675,8 +726,8 @@ public class FormMain extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jplClientsLayout.setVerticalGroup(
             jplClientsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -698,20 +749,11 @@ public class FormMain extends javax.swing.JFrame {
 
         jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Modelo:");
-
-        txtModelDevice.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtModelDeviceKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtModelDeviceKeyTyped(evt);
-            }
-        });
+        jLabel13.setText("Marca:");
 
         jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel16.setText("Marca:");
+        jLabel16.setText("Modelo:");
 
         jLabel18.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
@@ -728,6 +770,9 @@ public class FormMain extends javax.swing.JFrame {
         jLabel21.setText("Id Cliente:");
 
         txtIdClientDev.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIdClientDevKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtIdClientDevKeyTyped(evt);
             }
@@ -738,13 +783,10 @@ public class FormMain extends javax.swing.JFrame {
         jLabel22.setText("Cliente:");
 
         txtNameClientDev.setEditable(false);
-        txtNameClientDev.setText("José Antonio Patiño");
 
         jLabel23.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel23.setForeground(new java.awt.Color(255, 255, 255));
         jLabel23.setText("Tipo:");
-
-        cbxTypeDev.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -752,18 +794,28 @@ public class FormMain extends javax.swing.JFrame {
         jLabel19.setForeground(new java.awt.Color(255, 255, 255));
         jLabel19.setText("Problema:");
 
-        jTextArea1.setColumns(2);
-        jTextArea1.setRows(5);
-        jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane3.setViewportView(jTextArea1);
+        txtProblemDev.setColumns(2);
+        txtProblemDev.setRows(5);
+        txtProblemDev.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jScrollPane3.setViewportView(txtProblemDev);
 
         btnSaveDevice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save-24px.png"))); // NOI18N
         btnSaveDevice.setText("GUARDAR");
         btnSaveDevice.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSaveDevice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveDeviceActionPerformed(evt);
+            }
+        });
 
         btnUpdateDevice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/update-16px.png"))); // NOI18N
         btnUpdateDevice.setText("ACTUALIZAR");
         btnUpdateDevice.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdateDevice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateDeviceActionPerformed(evt);
+            }
+        });
 
         btnDeleteDevice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete-24px.png"))); // NOI18N
         btnDeleteDevice.setText("ELIMINAR");
@@ -783,16 +835,21 @@ public class FormMain extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtIdClientDev, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNameClientDev, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxTypeDev, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtIdClientDev, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNameClientDev, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxTypeDev, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(txtIdDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
@@ -802,8 +859,8 @@ public class FormMain extends javax.swing.JFrame {
                     .addComponent(jLabel18))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtModelDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtDevBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtModelDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSerieDev, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -813,7 +870,7 @@ public class FormMain extends javax.swing.JFrame {
                     .addComponent(jLabel19))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNumberClient3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtColorDev, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -836,9 +893,9 @@ public class FormMain extends javax.swing.JFrame {
                         .addComponent(cbxTypeDev, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(txtModelDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(3, 3, 3)
                         .addComponent(txtDevBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3)
+                        .addComponent(txtModelDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(txtSerieDev, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -852,7 +909,7 @@ public class FormMain extends javax.swing.JFrame {
                             .addGap(1, 1, 1)
                             .addComponent(btnCleanDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(txtNumberClient3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtColorDev, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -873,8 +930,10 @@ public class FormMain extends javax.swing.JFrame {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel17)
                                 .addGap(12, 12, 12)
-                                .addComponent(jLabel19)))))
-                .addGap(0, 8, Short.MAX_VALUE))
+                                .addComponent(jLabel19)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtIdDevice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         tblDevices.setModel(new javax.swing.table.DefaultTableModel(
@@ -885,7 +944,7 @@ public class FormMain extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Cliente", "Dispositivo", "Modelo", "Marca", "Núm Serie", "Color", "Problema"
+                "Id", "Cliente", "Dispositivo", "Marca", "Modelo", "Núm Serie", "Color", "Problema"
             }
         ));
         tblDevices.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1245,9 +1304,31 @@ public class FormMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     Color MainBtns = new Color(249, 177, 122);
+    
+    private void clearTable() {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            model.removeRow(i);
+            i = i - 1;
+        }
+    }
+    
+    private void fillTypeDevices() {
+        List<TypeDevice> listTdv = typeDvCtrl.listAllDevices();
+        cbxTypeDev.removeAllItems();
+        idList.clear();
+        
+        for (TypeDevice td : listTdv) {
+            idList.add(td.getId());
+            cbxTypeDev.addItem(td.getType());
+        }
+    }
+    
 
     private void btnClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientsActionPerformed
         jTabbedPane1.setSelectedIndex(1);
+        
+        clearTable();
+        clientCtrl.listClients(tblClients);
         
         btnClients.setBackground(Color.WHITE);
         btnRegister.setBackground(MainBtns);
@@ -1256,6 +1337,7 @@ public class FormMain extends javax.swing.JFrame {
         btnSettings.setBackground(MainBtns);
         btnPayments.setBackground(MainBtns);
         
+        btnSaveClient.setEnabled(true);
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
     }//GEN-LAST:event_btnClientsActionPerformed
@@ -1280,9 +1362,16 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveClient.setEnabled(false);
         btnUpdateClient.setEnabled(true);
         btnDeleteClient.setEnabled(true);
+        
+        int fila = tblClients.rowAtPoint(evt.getPoint());
+        txtIdClient.setText(tblClients.getValueAt(fila, 0).toString());
+        txtNameClient.setText(tblClients.getValueAt(fila, 1).toString());
+        txtPhoneClient.setText(tblClients.getValueAt(fila, 2).toString());
+        txtAddressClient.setText(tblClients.getValueAt(fila, 3).toString());
     }//GEN-LAST:event_tblClientsMouseClicked
 
     private void btnCleanClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanClientActionPerformed
+        clearClient();
         btnSaveClient.setEnabled(true);
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
@@ -1291,6 +1380,8 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnDevicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevicesActionPerformed
         jTabbedPane1.setSelectedIndex(2);
+        fillTypeDevices();
+        deviceCtrl.listDevices(tblDevices);
         
         btnDevices.setBackground(Color.WHITE);
         
@@ -1299,16 +1390,43 @@ public class FormMain extends javax.swing.JFrame {
         btnRepairHistory.setBackground(MainBtns);
         btnSettings.setBackground(MainBtns);
         btnPayments.setBackground(MainBtns);
+        
+        btnSaveDevice.setEnabled(true);
+        btnUpdateDevice.setEnabled(false);
+        btnDeleteDevice.setEnabled(false);
     }//GEN-LAST:event_btnDevicesActionPerformed
 
-    private void txtModelDeviceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtModelDeviceKeyTyped
+    private void tblDevicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDevicesMouseClicked
         btnSaveDevice.setEnabled(false);
         btnUpdateDevice.setEnabled(true);
         btnDeleteDevice.setEnabled(true);
-    }//GEN-LAST:event_txtModelDeviceKeyTyped
+        
+        int fila = tblDevices.rowAtPoint(evt.getPoint());
+        
+        txtIdDevice.setText(tblDevices.getValueAt(fila, 0).toString());
+        
+        dv = deviceCtrl.searchIdCtrl(Integer.parseInt(txtIdDevice.getText()));
+//        System.out.println("dv" + dv);
+//        System.out.println("id" + txtIdDevice.getText());
 
-    private void tblDevicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDevicesMouseClicked
-        // TODO add your handling code here:
+        txtIdClientDev.setText(String.valueOf(dv.getIdClient()));
+        txtNameClientDev.setText(dv.getClientName());
+        
+        String typeDevice = dv.getTypeDevice();
+        for (int i = 0; i < cbxTypeDev.getItemCount(); i++) {
+            String item = cbxTypeDev.getItemAt(i);
+            if (item.equals(typeDevice)) {
+                cbxTypeDev.setSelectedIndex(i);
+                break;
+            }
+        }
+        
+        txtDevBrand.setText(dv.getBrand());
+        txtModelDevice.setText(dv.getModel());
+        txtSerieDev.setText(dv.getSerie_number());
+        txtColorDev.setText(dv.getColor());
+        txtProblemDev.setText(dv.getProblem());
+
     }//GEN-LAST:event_tblDevicesMouseClicked
 
     private void txtIdClientDevKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdClientDevKeyTyped
@@ -1318,16 +1436,13 @@ public class FormMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtIdClientDevKeyTyped
 
-    private void txtModelDeviceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtModelDeviceKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txtDevBrand.requestFocus();
-        }
-    }//GEN-LAST:event_txtModelDeviceKeyPressed
-
     private void btnCleanDeviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanDeviceActionPerformed
+        clearDevice();
+        deviceCtrl.listDevices(tblDevices);
         btnSaveDevice.setEnabled(true);
         btnUpdateDevice.setEnabled(false);
         btnDeleteDevice.setEnabled(false);
+
     }//GEN-LAST:event_btnCleanDeviceActionPerformed
 
     private void btnRepairHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepairHistoryActionPerformed
@@ -1392,6 +1507,177 @@ public class FormMain extends javax.swing.JFrame {
     private void txtNameClient1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameClient1KeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameClient1KeyTyped
+
+    private void btnUpdateClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateClientActionPerformed
+        if ("".equals(txtIdClient.getText())) {
+            msg.errorMessage("Seleccione una fila", "Actualizar Cliente");
+        } else {
+            
+            if (!"".equals(txtNameClient.getText()) || !"".equals(txtPhoneClient.getText())) {
+                cl.setName(txtNameClient.getText());
+                cl.setPhone(txtPhoneClient.getText());
+                cl.setAddress(txtAddressClient.getText());
+                cl.setId(Integer.parseInt(txtIdClient.getText()));
+                
+                clientCtrl.updateClient(cl);
+                clearClient();
+                clientCtrl.listClients(tblClients);
+                
+                btnSaveClient.setEnabled(true);
+                btnUpdateClient.setEnabled(false);
+                btnDeleteClient.setEnabled(false);
+            } else {
+                msg.infoMessage("Los campos estan vacios", "Actualizar Cliente");
+            }
+        }
+    }//GEN-LAST:event_btnUpdateClientActionPerformed
+
+    private void btnSaveClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveClientActionPerformed
+        if (!"".equals(txtNameClient.getText()) || !"".equals(txtPhoneClient.getText()) || !"".equals(txtAddressClient.getText())) {
+            cl.setName(txtNameClient.getText());
+            cl.setPhone(txtPhoneClient.getText());
+            cl.setAddress(txtAddressClient.getText());
+            
+            clientCtrl.registerClient(cl);
+            clearClient();
+            clientCtrl.listClients(tblClients);
+            
+            btnUpdateClient.setEnabled(false);
+            btnDeleteClient.setEnabled(false);
+            btnSaveClient.setEnabled(true);
+        } else {
+            msg.infoMessage("Por favor, rellena todos los campos", "Registrar Cliente");
+        }
+    }//GEN-LAST:event_btnSaveClientActionPerformed
+
+    private void btnDeleteClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteClientActionPerformed
+        if (!"".equals(txtIdClient.getText())) {
+            boolean reply = msg.confirmMessage("¿Estás seguro que deseas eliminar este cliente?, \n"
+                    + "esta acción es irreversible", "Eliminar Cliente");
+            if (reply == true) {
+                clientCtrl.deleteClient(Integer.parseInt(txtIdClient.getText()));
+                clearClient();
+                clientCtrl.listClients(tblClients);
+                btnSaveClient.setEnabled(true);
+                btnUpdateClient.setEnabled(false);
+                btnDeleteClient.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteClientActionPerformed
+
+    private void tblRepairsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRepairsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblRepairsMouseClicked
+
+    private void btnSaveRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveRepActionPerformed
+
+    }//GEN-LAST:event_btnSaveRepActionPerformed
+
+    private void btnSaveDeviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveDeviceActionPerformed
+        
+        if (!"".equals(txtDevBrand.getText())
+                || !"".equals(txtModelDevice.getText()) || !"".equals(txtProblemDev.getText())) {
+            int selectedIndex = cbxTypeDev.getSelectedIndex();
+            
+            if (selectedIndex != -1) {
+                // Obtener el ID correspondiente al índice seleccionado
+                int typeDeviceId = idList.get(selectedIndex);
+                dv.setIdClient(Integer.parseInt(txtIdClientDev.getText()));
+                dv.setIdTypeDevice(typeDeviceId);
+                dv.setIdClient(cl.getId());
+                dv.setBrand(txtDevBrand.getText());
+                dv.setModel(txtModelDevice.getText());
+                dv.setSerie_number(txtSerieDev.getText());
+                dv.setColor(txtColorDev.getText());
+                dv.setProblem(txtProblemDev.getText());
+                
+                deviceCtrl.addDevice(dv);
+                clearDevice();
+                deviceCtrl.listDevices(tblDevices);
+                
+                btnSaveDevice.setEnabled(true);
+                btnUpdateDevice.setEnabled(false);
+                btnDeleteDevice.setEnabled(false);
+            }
+        } else {
+            msg.infoMessage("Por favor, rellena todos los campos", "Agregar Dipositivo");
+        }
+
+    }//GEN-LAST:event_btnSaveDeviceActionPerformed
+
+    private void txtIdClientDevKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdClientDevKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (!"".equals(txtIdClientDev.getText())) {
+                cl = clientCtrl.searchClientId(Integer.parseInt(txtIdClientDev.getText()));
+                txtNameClientDev.setText(cl.getName());
+                cbxTypeDev.requestFocus();
+            } else {
+                msg.warningMessage("Debe ingresar un cliente para este dispositivo", "Agregar Dispositivo");
+            }
+        }
+    }//GEN-LAST:event_txtIdClientDevKeyPressed
+
+    private void btnUpdateDeviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateDeviceActionPerformed
+        if (!"".equals(txtIdClientDev.getText()) && !"".equals(txtModelDevice.getText())
+                && !"".equals(txtDevBrand.getText()) && !"".equals(txtProblemDev.getText())
+                && !"".equals(txtIdDevice.getText())) {
+            
+            Device dv = new Device();
+            dv.setId(Integer.parseInt(txtIdDevice.getText()));
+            dv.setIdClient(Integer.parseInt(txtIdClientDev.getText()));
+
+            // Obtener el índice del elemento seleccionado en el JComboBox
+            int selectedIndex = cbxTypeDev.getSelectedIndex();
+            
+            if (selectedIndex != -1) {
+                // Obtener el ID correspondiente al índice seleccionado
+                int typeDeviceId = idList.get(selectedIndex);
+                dv.setIdTypeDevice(typeDeviceId);
+                
+                dv.setBrand(txtDevBrand.getText());
+                dv.setModel(txtModelDevice.getText());
+                dv.setSerie_number(txtSerieDev.getText());
+                dv.setColor(txtColorDev.getText());
+                dv.setProblem(txtProblemDev.getText());
+
+                // Aquí iría el código para actualizar el dispositivo en la base de datos
+                deviceCtrl.updateDevice(dv);
+                clearDevice();
+                deviceCtrl.listDevices(tblDevices);
+                
+                btnSaveDevice.setEnabled(true);
+                btnUpdateDevice.setEnabled(false);
+                btnDeleteDevice.setEnabled(false);
+                
+            } else {
+                msg.errorMessage("No se ha seleccionado ningún tipo de dispositivo", "Actualizar Dispositivo");
+            }
+        } else {
+            msg.infoMessage("Por favor, rellene todos los campos", "Actualizar Dispositivo");
+        }
+    }//GEN-LAST:event_btnUpdateDeviceActionPerformed
+    
+    private void clearDevice() {
+        String t = "";
+        
+        txtIdDevice.setText(t);
+        txtIdClientDev.setText(t);
+        txtNameClientDev.setText(t);
+        fillTypeDevices();
+        txtDevBrand.setText(t);
+        txtModelDevice.setText(t);
+        txtSerieDev.setText(t);
+        txtColorDev.setText(t);
+        txtProblemDev.setText(t);
+    }
+    
+    private void clearClient() {
+        String t = "";
+        txtIdClient.setText(t);
+        txtNameClient.setText(t);
+        txtPhoneClient.setText(t);
+        txtAddressClient.setText(t);
+    }
 
     /**
      * @param args the command line arguments
@@ -1505,8 +1791,6 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private com.toedter.calendar.JDateChooser jdDatePay;
     private com.toedter.calendar.JDateChooser jdFechaRecibo;
@@ -1523,19 +1807,23 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTable tblDevices;
     private javax.swing.JTable tblPayments;
     private javax.swing.JTable tblRepairs;
+    private javax.swing.JTextArea txtAddressClient;
+    private javax.swing.JTextField txtColorDev;
     private javax.swing.JTextField txtDevBrand;
+    private javax.swing.JTextField txtIdClient;
     private javax.swing.JTextField txtIdClientDev;
     private javax.swing.JTextField txtIdDevRep;
+    private javax.swing.JTextField txtIdDevice;
     private javax.swing.JTextField txtIdRepPayment;
     private javax.swing.JTextField txtModelDevice;
     private javax.swing.JTextField txtNameClient;
     private javax.swing.JTextField txtNameClient1;
     private javax.swing.JTextField txtNameClientDev;
     private javax.swing.JTextField txtNameClientRep;
-    private javax.swing.JTextField txtNumberClient;
     private javax.swing.JTextField txtNumberClient1;
-    private javax.swing.JTextField txtNumberClient3;
+    private javax.swing.JTextField txtPhoneClient;
     private javax.swing.JTextField txtPriceRep;
+    private javax.swing.JTextArea txtProblemDev;
     private javax.swing.JTextField txtSerieDev;
     private javax.swing.JTextField txtServiceRep;
     private javax.swing.JTextField txtTypeDeviceRep;

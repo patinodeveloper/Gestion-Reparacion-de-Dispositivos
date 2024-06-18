@@ -14,6 +14,8 @@ public class Device {
     private int id;
     private int idClient;
     private int idTypeDevice;
+    private String clientName;
+    private String typeDevice;
     private String brand;
     private String model;
     private String serie_number;
@@ -23,10 +25,12 @@ public class Device {
     public Device() {
     }
 
-    public Device(int id, int idClient, int idTypeDevice, String brand, String model, String serie_number, String color, String problem) {
+    public Device(int id, int idClient, int idTypeDevice, String clientName, String typeDevice, String brand, String model, String serie_number, String color, String problem) {
         this.id = id;
         this.idClient = idClient;
         this.idTypeDevice = idTypeDevice;
+        this.clientName = clientName;
+        this.typeDevice = typeDevice;
         this.brand = brand;
         this.model = model;
         this.serie_number = serie_number;
@@ -56,6 +60,22 @@ public class Device {
 
     public void setIdTypeDevice(int idTypeDevice) {
         this.idTypeDevice = idTypeDevice;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getTypeDevice() {
+        return typeDevice;
+    }
+
+    public void setTypeDevice(String typeDevice) {
+        this.typeDevice = typeDevice;
     }
 
     public String getBrand() {
@@ -100,7 +120,7 @@ public class Device {
 
     @Override
     public String toString() {
-        return "Device{" + "id=" + id + ", idClient=" + idClient + ", idTypeDevice=" + idTypeDevice + ", brand=" + brand + ", model=" + model + ", serie_number=" + serie_number + ", color=" + color + ", problem=" + problem + '}';
+        return "Device{" + "id=" + id + ", idClient=" + idClient + ", idTypeDevice=" + idTypeDevice + ", clientName=" + clientName + ", typeDevice=" + typeDevice + ", brand=" + brand + ", model=" + model + ", serie_number=" + serie_number + ", color=" + color + ", problem=" + problem + '}';
     }
 
 }

@@ -27,7 +27,6 @@ public class FormLogin extends javax.swing.JFrame {
     public void validar() {
         String email = txtEmail.getText();
         String pass = String.valueOf(txtPass.getPassword());
-        System.out.println("em" + email + " pass" + pass);
         if (!"".equals(email) || !"".equals(pass)) {
             userLog = login.log(email, pass);
             if (userLog.getEmail() != null && userLog.getPassword() != null) {
@@ -97,7 +96,7 @@ public class FormLogin extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Raleway", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/usuario-w-lg-16px.png"))); // NOI18N
-        jLabel3.setText("Usuario");
+        jLabel3.setText("Email");
 
         jLabel4.setFont(new java.awt.Font("Raleway", 0, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));

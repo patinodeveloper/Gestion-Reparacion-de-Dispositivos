@@ -3,7 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/model/ClientDAO.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/model/SQLConnection.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/view/FormMain.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/model/classes/Combo.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/controller/DeviceCtrl.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/controller/TypeDeviceCtrl.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/model/TypeDeviceDAO.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/controller/Combo.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/model/DeviceDAO.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/model/classes/Device.java</file>
+            <file>file:/C:/Users/Antonio/Documents/Reporte%20de%20Practicas/SistemaGestionDispositivos/src/controller/ClientCtrl.java</file>
         </group>
     </open-files>
 </project-private>
