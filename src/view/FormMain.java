@@ -27,7 +27,7 @@ import model.classes.User;
  * @author Antonio
  */
 public class FormMain extends javax.swing.JFrame {
-
+    
     private Client cl = new Client();
     private ClientCtrl clientCtrl = new ClientCtrl();
     private Device dv = new Device();
@@ -39,16 +39,19 @@ public class FormMain extends javax.swing.JFrame {
     DefaultTableModel model = new DefaultTableModel();
     private final Messages msg = new Messages();
     private List<Integer> idList = new ArrayList();
-
+    
     public FormMain() {
         initComponents();
     }
-
+    
     public FormMain(User user) {
         initComponents();
         lblUser.setText(user.getName());
         txtIdClient.setVisible(false);
+        txtIdDevice.setVisible(false);
+        txtIdRepair.setVisible(false);
         fillStates();
+        fillPaymentStates();
         loadRepairs();
     }
 
@@ -104,6 +107,10 @@ public class FormMain extends javax.swing.JFrame {
         txtIdRepair = new javax.swing.JTextField();
         txtProblemRep = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
+        lblDeliveredState = new javax.swing.JLabel();
+        jdDeliveredDate = new com.toedter.calendar.JDateChooser();
+        jLabel39 = new javax.swing.JLabel();
+        cbxPaymentStateRep = new javax.swing.JComboBox<>();
         jplClients = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClients = new javax.swing.JTable();
@@ -292,7 +299,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addComponent(btnPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         jplHeader.setBackground(new java.awt.Color(45, 50, 80));
@@ -387,7 +394,6 @@ public class FormMain extends javax.swing.JFrame {
         jLabel28.setText("Cliente:");
 
         txtNameClientRep.setEditable(false);
-        txtNameClientRep.setText("José Antonio Patiño Galicia");
 
         jLabel29.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel29.setForeground(new java.awt.Color(255, 255, 255));
@@ -407,6 +413,11 @@ public class FormMain extends javax.swing.JFrame {
         btnUpdateRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/update-16px.png"))); // NOI18N
         btnUpdateRep.setText("ACTUALIZAR");
         btnUpdateRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdateRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateRepActionPerformed(evt);
+            }
+        });
 
         btnDeleteRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete-24px.png"))); // NOI18N
         btnDeleteRep.setText("ELIMINAR");
@@ -422,7 +433,6 @@ public class FormMain extends javax.swing.JFrame {
         });
 
         txtTypeDeviceRep.setEditable(false);
-        txtTypeDeviceRep.setText("Celular, Tablet, ETC");
 
         btnFinalize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/entregar-24px.png"))); // NOI18N
         btnFinalize.setText("ENTREGAR");
@@ -449,135 +459,185 @@ public class FormMain extends javax.swing.JFrame {
         jLabel38.setForeground(new java.awt.Color(255, 255, 255));
         jLabel38.setText("Problema:");
 
+        lblDeliveredState.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        lblDeliveredState.setForeground(new java.awt.Color(255, 255, 255));
+        lblDeliveredState.setText("Fecha Entrega:");
+
+        jLabel39.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel39.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel39.setText("Pago:");
+
+        cbxPaymentStateRep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                    .addComponent(txtNameClientRep, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtProblemRep))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtServiceRep)
-                    .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel26)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbxStateRepair, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnFinalize, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel30)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnPendingRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(btnCompleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSuccessRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblDeliveredState, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(3, 3, 3)))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jdDeliveredDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtServiceRep)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 3, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSaveRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUpdateRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnCleanRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnDeleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26)
+                                    .addComponent(jLabel39))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxPaymentStateRep, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxStateRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(btnFinalize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSaveRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnUpdateRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDeleteRep, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPendingRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCompleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSuccessRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCleanRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(7, 7, 7)
-                                .addComponent(jLabel20)
-                                .addGap(9, 9, 9)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel24)
-                                    .addComponent(txtServiceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(6, 6, 6)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel25)
-                                    .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel27))
+                                .addGap(3, 3, 3))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(btnSaveRep)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnUpdateRep)
-                        .addGap(1, 1, 1)
-                        .addComponent(btnDeleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1)
-                        .addComponent(btnCleanRep, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel28)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel38))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator3)
+                .addContainerGap())
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel20)
+                    .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxStateRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnFinalize)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(7, 7, 7)
+                        .addComponent(lblDeliveredState))
+                    .addComponent(jdDeliveredDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtServiceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25))
+                .addGap(23, 23, 23))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(jSeparator4)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnPendingRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSuccessRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCompleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel27))
-                                        .addGap(3, 3, 3))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                        .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                                .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(40, 40, 40)
-                                .addComponent(jLabel28)
-                                .addGap(12, 12, 12)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel29)
-                                    .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbxStateRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnSaveRep)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbxPaymentStateRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnUpdateRep)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel38))))
-                .addGap(0, 6, Short.MAX_VALUE))
+                            .addComponent(btnFinalize)
+                            .addComponent(btnDeleteRep))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCleanRep))))
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout jplRegisterLayout = new javax.swing.GroupLayout(jplRegister);
@@ -589,16 +649,16 @@ public class FormMain extends javax.swing.JFrame {
                 .addGroup(jplRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane5))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jplRegisterLayout.setVerticalGroup(
             jplRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jplRegisterLayout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGap(9, 9, 9))
         );
 
         jTabbedPane1.addTab("tab1", jplRegister);
@@ -763,7 +823,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jplClientsLayout.setVerticalGroup(
             jplClientsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -772,7 +832,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addGroup(jplClientsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab2", jplClients);
@@ -1014,7 +1074,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1031,14 +1091,14 @@ public class FormMain extends javax.swing.JFrame {
             .addGroup(jplRepHistoryLayout.createSequentialGroup()
                 .addGap(333, 333, 333)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(379, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jplRepHistoryLayout.setVerticalGroup(
             jplRepHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jplRepHistoryLayout.createSequentialGroup()
                 .addGap(182, 182, 182)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab4", jplRepHistory);
@@ -1197,7 +1257,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jplPaymentsLayout.setVerticalGroup(
             jplPaymentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1206,7 +1266,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addGroup(jplPaymentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab5", jplPayments);
@@ -1292,7 +1352,7 @@ public class FormMain extends javax.swing.JFrame {
                         .addGap(8, 8, 8)
                         .addComponent(jLabel37))
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                 .addComponent(btnUpdateSett, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14))
         );
@@ -1310,7 +1370,7 @@ public class FormMain extends javax.swing.JFrame {
         );
         jplSettingsLayout.setVerticalGroup(
             jplSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+            .addGap(0, 444, Short.MAX_VALUE)
             .addGroup(jplSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jplSettingsLayout.createSequentialGroup()
                     .addGap(43, 43, 43)
@@ -1336,9 +1396,11 @@ public class FormMain extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jplMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jplHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jplHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -1356,40 +1418,49 @@ public class FormMain extends javax.swing.JFrame {
         List<TypeDevice> listTdv = typeDvCtrl.listAllDevices();
         cbxTypeDev.removeAllItems();
         idList.clear();
-
+        
         for (TypeDevice td : listTdv) {
             idList.add(td.getId());
             cbxTypeDev.addItem(td.getType());
         }
     }
-
+    
     private void fillStates() {
         List<String> states = repairCtrl.listRepairStates();
         cbxStateRepair.removeAllItems();
-
+        
         for (String state : states) {
             cbxStateRepair.addItem(state);
         }
     }
-
+    
+    private void fillPaymentStates() {
+        List<String> PaymentStates = repairCtrl.listRepairPaymentStates();
+        cbxPaymentStateRep.removeAllItems();
+        
+        for (String PaymentState : PaymentStates) {
+            cbxPaymentStateRep.addItem(PaymentState);
+        }
+    }
+    
     private void loadRepairs() {
         repairCtrl.listRepairs(tblRepairs);
     }
-
+    
 
     private void btnClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientsActionPerformed
         jTabbedPane1.setSelectedIndex(1);
-
+        
         clearClient();
         clientCtrl.listClients(tblClients);
-
+        
         btnClients.setBackground(Color.WHITE);
         btnRegister.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
         btnRepairHistory.setBackground(MainBtns);
         btnSettings.setBackground(MainBtns);
         btnPayments.setBackground(MainBtns);
-
+        
         btnSaveClient.setEnabled(true);
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
@@ -1397,15 +1468,17 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         jTabbedPane1.setSelectedIndex(0);
-
+        
+        clearRepair();
         fillStates();
+        fillPaymentStates();
         repairCtrl.listRepairs(tblRepairs);
         btnRegister.setBackground(Color.WHITE);
-
+        
         btnSaveRep.setEnabled(true);
         btnUpdateRep.setEnabled(false);
         btnDeleteRep.setEnabled(false);
-
+        
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
         btnRepairHistory.setBackground(MainBtns);
@@ -1421,7 +1494,7 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveClient.setEnabled(false);
         btnUpdateClient.setEnabled(true);
         btnDeleteClient.setEnabled(true);
-
+        
         int fila = tblClients.rowAtPoint(evt.getPoint());
         txtIdClient.setText(tblClients.getValueAt(fila, 0).toString());
         txtNameClient.setText(tblClients.getValueAt(fila, 1).toString());
@@ -1442,15 +1515,15 @@ public class FormMain extends javax.swing.JFrame {
         fillTypeDevices();
         deviceCtrl.listDevices(tblDevices);
         clearDevice();
-
+        
         btnDevices.setBackground(Color.WHITE);
-
+        
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
         btnRepairHistory.setBackground(MainBtns);
         btnSettings.setBackground(MainBtns);
         btnPayments.setBackground(MainBtns);
-
+        
         btnSaveDevice.setEnabled(true);
         btnUpdateDevice.setEnabled(false);
         btnDeleteDevice.setEnabled(false);
@@ -1460,18 +1533,18 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveDevice.setEnabled(false);
         btnUpdateDevice.setEnabled(true);
         btnDeleteDevice.setEnabled(true);
-
+        
         int fila = tblDevices.rowAtPoint(evt.getPoint());
-
+        
         txtIdDevice.setText(tblDevices.getValueAt(fila, 0).toString());
-
+        
         dv = deviceCtrl.searchIdCtrl(Integer.parseInt(txtIdDevice.getText()));
 //        System.out.println("dv" + dv);
 //        System.out.println("id" + txtIdDevice.getText());
 
         txtIdClientDev.setText(String.valueOf(dv.getIdClient()));
         txtNameClientDev.setText(dv.getClientName());
-
+        
         String typeDevice = dv.getTypeDevice();
         for (int i = 0; i < cbxTypeDev.getItemCount(); i++) {
             String item = cbxTypeDev.getItemAt(i);
@@ -1480,7 +1553,7 @@ public class FormMain extends javax.swing.JFrame {
                 break;
             }
         }
-
+        
         txtDevBrand.setText(dv.getBrand());
         txtModelDevice.setText(dv.getModel());
         txtSerieDev.setText(dv.getSerie_number());
@@ -1507,7 +1580,7 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnRepairHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepairHistoryActionPerformed
         jTabbedPane1.setSelectedIndex(3);
-
+        
         btnRepairHistory.setBackground(Color.WHITE);
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
@@ -1521,14 +1594,18 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdDevRepKeyTyped
 
     private void btnCleanRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanRepActionPerformed
-        // TODO add your handling code here:
+        clearRepair();
+        repairCtrl.listRepairs(tblRepairs);
+        btnSaveRep.setEnabled(true);
+        btnUpdateRep.setEnabled(false);
+        btnDeleteRep.setEnabled(false);
     }//GEN-LAST:event_btnCleanRepActionPerformed
 
     private void btnPaymentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentsActionPerformed
         jTabbedPane1.setSelectedIndex(4);
-
+        
         btnPayments.setBackground(Color.WHITE);
-
+        
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
@@ -1538,9 +1615,9 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
         jTabbedPane1.setSelectedIndex(5);
-
+        
         btnSettings.setBackground(Color.WHITE);
-
+        
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
@@ -1572,17 +1649,17 @@ public class FormMain extends javax.swing.JFrame {
         if ("".equals(txtIdClient.getText())) {
             msg.errorMessage("Seleccione una fila", "Actualizar Cliente");
         } else {
-
+            
             if (!"".equals(txtNameClient.getText()) || !"".equals(txtPhoneClient.getText())) {
                 cl.setName(txtNameClient.getText());
                 cl.setPhone(txtPhoneClient.getText());
                 cl.setAddress(txtAddressClient.getText());
                 cl.setId(Integer.parseInt(txtIdClient.getText()));
-
+                
                 clientCtrl.updateClient(cl);
                 clearClient();
                 clientCtrl.listClients(tblClients);
-
+                
                 btnSaveClient.setEnabled(true);
                 btnUpdateClient.setEnabled(false);
                 btnDeleteClient.setEnabled(false);
@@ -1597,11 +1674,11 @@ public class FormMain extends javax.swing.JFrame {
             cl.setName(txtNameClient.getText());
             cl.setPhone(txtPhoneClient.getText());
             cl.setAddress(txtAddressClient.getText());
-
+            
             clientCtrl.registerClient(cl);
             clearClient();
             clientCtrl.listClients(tblClients);
-
+            
             btnUpdateClient.setEnabled(false);
             btnDeleteClient.setEnabled(false);
             btnSaveClient.setEnabled(true);
@@ -1618,7 +1695,7 @@ public class FormMain extends javax.swing.JFrame {
                 clientCtrl.deleteClient(Integer.parseInt(txtIdClient.getText()));
                 clearClient();
                 clientCtrl.listClients(tblClients);
-
+                
                 btnSaveClient.setEnabled(true);
                 btnUpdateClient.setEnabled(false);
                 btnDeleteClient.setEnabled(false);
@@ -1627,7 +1704,28 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteClientActionPerformed
 
     private void tblRepairsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRepairsMouseClicked
-        // TODO add your handling code here:
+        int fila = tblRepairs.rowAtPoint(evt.getPoint());
+        
+        txtIdRepair.setText(tblRepairs.getValueAt(fila, 0).toString());
+        
+        rep = repairCtrl.searchRepair(Integer.parseInt(txtIdRepair.getText()));
+        System.out.println("repair " + rep);
+        
+        txtIdDevRep.setText(String.valueOf(rep.getIdDevice()));
+        txtNameClientRep.setText(rep.getClient());
+        txtTypeDeviceRep.setText(rep.getDevice());
+        txtProblemRep.setText(rep.getProblem());
+        txtServiceRep.setText(rep.getService());
+        txtPriceRep.setText(String.valueOf(rep.getPrice()));
+        jdReceivedDate.setDate(rep.getReceivedDate());
+        jdDeliveredDate.setDate(rep.getDeliveredDate());
+        
+        cbxStateRepair.setSelectedItem(rep.getState().toString());
+        cbxPaymentStateRep.setSelectedItem(rep.getPaymentState().toString());
+        
+        btnSaveRep.setEnabled(false);
+        btnUpdateRep.setEnabled(true);
+        btnDeleteRep.setEnabled(true);
     }//GEN-LAST:event_tblRepairsMouseClicked
 
     private void btnSaveRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveRepActionPerformed
@@ -1638,11 +1736,11 @@ public class FormMain extends javax.swing.JFrame {
                 rep.setPrice(Double.parseDouble(txtPriceRep.getText()));
                 rep.setService(txtServiceRep.getText());
                 rep.setReceivedDate(jdReceivedDate.getDate());
-
+                
                 repairCtrl.addRepar(rep);
                 clearRepair();
                 repairCtrl.listRepairs(tblRepairs);
-
+                
                 btnSaveRep.setEnabled(true);
                 btnUpdateRep.setEnabled(false);
                 btnDeleteRep.setEnabled(false);
@@ -1658,7 +1756,7 @@ public class FormMain extends javax.swing.JFrame {
         if (!"".equals(txtDevBrand.getText())
                 || !"".equals(txtModelDevice.getText()) || !"".equals(txtProblemDev.getText())) {
             int selectedIndex = cbxTypeDev.getSelectedIndex();
-
+            
             if (selectedIndex != -1) {
                 // Obtener el ID correspondiente al índice seleccionado
                 int typeDeviceId = idList.get(selectedIndex);
@@ -1670,11 +1768,11 @@ public class FormMain extends javax.swing.JFrame {
                 dv.setSerie_number(txtSerieDev.getText());
                 dv.setColor(txtColorDev.getText());
                 dv.setProblem(txtProblemDev.getText());
-
+                
                 deviceCtrl.addDevice(dv);
                 clearDevice();
                 deviceCtrl.listDevices(tblDevices);
-
+                
                 btnSaveDevice.setEnabled(true);
                 btnUpdateDevice.setEnabled(false);
                 btnDeleteDevice.setEnabled(false);
@@ -1701,34 +1799,31 @@ public class FormMain extends javax.swing.JFrame {
         if (!"".equals(txtIdClientDev.getText()) && !"".equals(txtModelDevice.getText())
                 && !"".equals(txtDevBrand.getText()) && !"".equals(txtProblemDev.getText())
                 && !"".equals(txtIdDevice.getText())) {
-
+            
             Device dv = new Device();
             dv.setId(Integer.parseInt(txtIdDevice.getText()));
             dv.setIdClient(Integer.parseInt(txtIdClientDev.getText()));
-
-            // Obtener el índice del elemento seleccionado en el JComboBox
+            
             int selectedIndex = cbxTypeDev.getSelectedIndex();
-
             if (selectedIndex != -1) {
-                // Obtener el ID correspondiente al índice seleccionado
+                
                 int typeDeviceId = idList.get(selectedIndex);
                 dv.setIdTypeDevice(typeDeviceId);
-
+                
                 dv.setBrand(txtDevBrand.getText());
                 dv.setModel(txtModelDevice.getText());
                 dv.setSerie_number(txtSerieDev.getText());
                 dv.setColor(txtColorDev.getText());
                 dv.setProblem(txtProblemDev.getText());
-
-                // Aquí iría el código para actualizar el dispositivo en la base de datos
+                
                 deviceCtrl.updateDevice(dv);
                 clearDevice();
                 deviceCtrl.listDevices(tblDevices);
-
+                
                 btnSaveDevice.setEnabled(true);
                 btnUpdateDevice.setEnabled(false);
                 btnDeleteDevice.setEnabled(false);
-
+                
             } else {
                 msg.errorMessage("No se ha seleccionado ningún tipo de dispositivo", "Actualizar Dispositivo");
             }
@@ -1745,7 +1840,7 @@ public class FormMain extends javax.swing.JFrame {
                 deviceCtrl.deleteDevice(Integer.parseInt(txtIdDevice.getText()));
                 clearDevice();
                 deviceCtrl.listDevices(tblDevices);
-
+                
                 btnSaveDevice.setEnabled(true);
                 btnUpdateDevice.setEnabled(false);
                 btnDeleteDevice.setEnabled(false);
@@ -1767,30 +1862,69 @@ public class FormMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtIdDevRepKeyPressed
 
+    private void btnUpdateRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRepActionPerformed
+        if (!"".equals(txtIdRepair.getText()) && jdReceivedDate.getDate() != null
+                && !"".equals(txtServiceRep.getText()) && !"".equals(txtPriceRep.getText())) {
+            
+            rep.setId(Integer.parseInt(txtIdRepair.getText()));
+            rep.setIdDevice(Integer.parseInt(txtIdDevRep.getText()));
+            
+            int selectedIndex = cbxStateRepair.getSelectedIndex();
+            if (selectedIndex != -1) {
+                
+                rep.setService(txtServiceRep.getText());
+                rep.setPrice(Double.parseDouble(txtPriceRep.getText()));
+                rep.setReceivedDate(jdReceivedDate.getDate());
+                rep.setDeliveredDate(jdDeliveredDate.getDate());
+                
+                String selectedState = cbxStateRepair.getSelectedItem().toString();
+                rep.setState(Repair.Estado.fromString(selectedState));
+                String selectedPaymentState = cbxPaymentStateRep.getSelectedItem().toString();
+                rep.setPaymentState(Repair.EstadoPago.fromString(selectedPaymentState));
+                
+                repairCtrl.updateRepair(rep);
+                clearRepair();
+                repairCtrl.listRepairs(tblRepairs);
+                
+                btnSaveRep.setEnabled(true);
+                btnUpdateRep.setEnabled(false);
+                btnDeleteRep.setEnabled(false);
+                
+            } else {
+                msg.errorMessage("No se ha seleccionado ningún tipo de estado", "Actualizar Reparación");
+            }
+        } else {
+            msg.infoMessage("Por favor, rellene todos los campos", "Actualizar Reparación");
+        }
+    }//GEN-LAST:event_btnUpdateRepActionPerformed
+    
     private void clearRepair() {
         String t = "";
+        fillStates();
         txtIdRepair.setText(t);
+        txtIdDevRep.setText(t);
         txtNameClientRep.setText(t);
         txtTypeDeviceRep.setText(t);
+        txtProblemRep.setText(t);
         jdReceivedDate.setDate(null);
+        jdDeliveredDate.setDate(null);
         txtServiceRep.setText(t);
         txtPriceRep.setText(t);
     }
-
+    
     private void clearDevice() {
         String t = "";
-
+        fillTypeDevices();
         txtIdDevice.setText(t);
         txtIdClientDev.setText(t);
         txtNameClientDev.setText(t);
-        fillTypeDevices();
         txtDevBrand.setText(t);
         txtModelDevice.setText(t);
         txtSerieDev.setText(t);
         txtColorDev.setText(t);
         txtProblemDev.setText(t);
     }
-
+    
     private void clearClient() {
         String t = "";
         txtIdClient.setText(t);
@@ -1864,6 +1998,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdateRep;
     private javax.swing.JButton btnUpdateSett;
     private javax.swing.JComboBox<String> cbxPaymentMethod;
+    private javax.swing.JComboBox<String> cbxPaymentStateRep;
     private javax.swing.JComboBox<String> cbxStateRepair;
     private javax.swing.JComboBox<String> cbxTypeDev;
     private javax.swing.JLabel jLabel1;
@@ -1895,6 +2030,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1914,6 +2050,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea3;
     private com.toedter.calendar.JDateChooser jdDatePay;
+    private com.toedter.calendar.JDateChooser jdDeliveredDate;
     private com.toedter.calendar.JDateChooser jdReceivedDate;
     private javax.swing.JPanel jplClients;
     private javax.swing.JPanel jplDevices;
@@ -1923,6 +2060,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JPanel jplRegister;
     private javax.swing.JPanel jplRepHistory;
     private javax.swing.JPanel jplSettings;
+    private javax.swing.JLabel lblDeliveredState;
     private javax.swing.JLabel lblUser;
     private javax.swing.JTable tblClients;
     private javax.swing.JTable tblDevices;

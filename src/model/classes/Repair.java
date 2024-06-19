@@ -16,6 +16,7 @@ public class Repair {
     private int id;
     private int idDevice;
     private String device;
+    private String client;
     private String problem;
     private String service;
     private double price;
@@ -80,10 +81,11 @@ public class Repair {
     public Repair() {
     }
 
-    public Repair(int id, int idDevice, String device, String problem, String service, double price, Date receivedDate, Date deliveredDate, Estado state, EstadoPago paymentState) {
+    public Repair(int id, int idDevice, String device, String client, String problem, String service, double price, Date receivedDate, Date deliveredDate, Estado state, EstadoPago paymentState) {
         this.id = id;
         this.idDevice = idDevice;
         this.device = device;
+        this.client = client;
         this.problem = problem;
         this.service = service;
         this.price = price;
@@ -115,6 +117,14 @@ public class Repair {
 
     public void setDevice(String device) {
         this.device = device;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public String getProblem() {
@@ -171,6 +181,11 @@ public class Repair {
 
     public void setPaymentState(EstadoPago paymentState) {
         this.paymentState = paymentState;
+    }
+
+    @Override
+    public String toString() {
+        return "Repair{" + "id=" + id + ", idDevice=" + idDevice + ", device=" + device + ", client=" + client + ", problem=" + problem + ", service=" + service + ", price=" + price + ", receivedDate=" + receivedDate + ", deliveredDate=" + deliveredDate + ", state=" + state + ", paymentState=" + paymentState + '}';
     }
 
 }

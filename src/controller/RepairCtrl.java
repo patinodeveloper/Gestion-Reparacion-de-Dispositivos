@@ -58,4 +58,21 @@ public class RepairCtrl {
     public List<String> listRepairStates() {
         return repairDAO.getRepairStates();
     }
+    
+    public List<String> listRepairPaymentStates() {
+        return repairDAO.getRepairPaymentStates();
+    }
+
+    public void updateRepair(Repair repair) {
+        boolean isUpdated = repairDAO.updateRepair(repair);
+        if (isUpdated) {
+            msg.successfulMessage("Datos de la reparacióin actualizados", "Actualizar Datos de la Reparación");
+        } else {
+            msg.errorMessage("Error al intentar actualizar los datos de la reparación", "Actualizar Datos de la Reparación");
+        }
+    }
+
+    public Repair searchRepair(int id) {
+        return repairDAO.searchRepair(id);
+    }
 }

@@ -25,7 +25,6 @@ public class RepairDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    // Método para insertar una reparación
     public boolean insertRepair(Repair repair) {
         String sql = "INSERT INTO reparaciones (id_dispositivo, servicio, costo, fecha_recepcion, fecha_entrega) "
                 + "VALUES (?, ?, ?, ?, ?)";
@@ -112,6 +111,29 @@ public class RepairDAO {
         return states;
     }
 
+    public List<String> getRepairPaymentStates() {
+        List<String> paymentStates = new ArrayList<>();
+        String sql = "SHOW COLUMNS FROM reparaciones LIKE 'estado_pago'";
+
+        try {
+            con = cn.getConnectDB();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                String columnType = rs.getString("Type"); // Obtenemos el tipo de la columna
+                String enumValues = columnType.replaceAll("enum\\(|\\)", ""); // Eliminamos "enum(" y ")"
+                String[] values = enumValues.split(","); // Separamos los valores
+
+                for (String value : values) {
+                    paymentStates.add(value.replace("'", "")); // Eliminamos las comillas simples
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return paymentStates;
+    }
+
     public boolean updateRepair(Repair repair) {
         String sql = "UPDATE reparaciones SET id_dispositivo = ?, servicio = ?, costo = ?, fecha_recepcion = ?, fecha_entrega = ?, estado = ?, estado_pago = ? WHERE id_reparacion = ?";
         try {
@@ -131,6 +153,49 @@ public class RepairDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Repair searchRepair(int id) {
+        Repair rep = new Repair();
+        String sql = "SELECT r.id_reparacion, r.id_dispositivo, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, "
+                + "r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago, c.nombre AS nombre_cliente "
+                + "FROM reparaciones r "
+                + "JOIN dispositivos d ON r.id_dispositivo = d.id_dispositivo "
+                + "JOIN tipos_dispositivos td ON d.id_tipo_dispositivo = td.id_tipo_dispositivo "
+                + "JOIN clientes c ON d.id_cliente = c.id_cliente "
+                + "WHERE r.id_reparacion = ?";
+
+        try {
+            con = cn.getConnectDB();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                rep.setId(rs.getInt("id_reparacion"));
+                rep.setIdDevice(rs.getInt("id_dispositivo"));
+                rep.setClient(rs.getString("nombre_cliente"));
+                rep.setDevice(rs.getString("dispositivo"));
+                rep.setProblem(rs.getString("problema"));
+                rep.setService(rs.getString("servicio"));
+                rep.setPrice(rs.getDouble("costo"));
+                rep.setReceivedDate(rs.getDate("fecha_recepcion"));
+                rep.setDeliveredDate(rs.getDate("fecha_entrega"));
+
+                String estado = rs.getString("estado");
+                if (estado != null) {
+                    rep.setState(Repair.Estado.valueOf(estado.toUpperCase().replace(" ", "_")));
+                }
+
+                String estadoPago = rs.getString("estado_pago");
+                if (estadoPago != null) {
+                    rep.setPaymentState(Repair.EstadoPago.valueOf(estadoPago.toUpperCase().replace(" ", "_")));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+        return rep;
     }
 
 }
