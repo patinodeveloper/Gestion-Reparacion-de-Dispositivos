@@ -58,7 +58,7 @@ public class RepairCtrl {
     public List<String> listRepairStates() {
         return repairDAO.getRepairStates();
     }
-    
+
     public List<String> listRepairPaymentStates() {
         return repairDAO.getRepairPaymentStates();
     }
@@ -69,6 +69,15 @@ public class RepairCtrl {
             msg.successfulMessage("Datos de la reparacióin actualizados", "Actualizar Datos de la Reparación");
         } else {
             msg.errorMessage("Error al intentar actualizar los datos de la reparación", "Actualizar Datos de la Reparación");
+        }
+    }
+
+    public void deleteRepair(int id) {
+        boolean isDeleted = repairDAO.deleteRepair(id);
+        if (isDeleted) {
+            msg.successfulMessage("Reparación eliminada exitosamente!", "Eliminar Reparación");
+        } else {
+            msg.errorMessage("Error al intentar eliminar esta reparación", "Eliminar Reparación");
         }
     }
 

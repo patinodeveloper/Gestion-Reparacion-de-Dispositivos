@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.classes.Client;
-import model.classes.Combo;
 import model.classes.Device;
 import model.classes.Repair;
 import model.classes.TypeDevice;
@@ -27,7 +26,7 @@ import model.classes.User;
  * @author Antonio
  */
 public class FormMain extends javax.swing.JFrame {
-    
+
     private Client cl = new Client();
     private ClientCtrl clientCtrl = new ClientCtrl();
     private Device dv = new Device();
@@ -39,11 +38,11 @@ public class FormMain extends javax.swing.JFrame {
     DefaultTableModel model = new DefaultTableModel();
     private final Messages msg = new Messages();
     private List<Integer> idList = new ArrayList();
-    
+
     public FormMain() {
         initComponents();
     }
-    
+
     public FormMain(User user) {
         initComponents();
         lblUser.setText(user.getName());
@@ -422,6 +421,11 @@ public class FormMain extends javax.swing.JFrame {
         btnDeleteRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete-24px.png"))); // NOI18N
         btnDeleteRep.setText("ELIMINAR");
         btnDeleteRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeleteRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteRepActionPerformed(evt);
+            }
+        });
 
         btnCleanRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove-24px.png"))); // NOI18N
         btnCleanRep.setText("LIMPIAR");
@@ -1418,49 +1422,49 @@ public class FormMain extends javax.swing.JFrame {
         List<TypeDevice> listTdv = typeDvCtrl.listAllDevices();
         cbxTypeDev.removeAllItems();
         idList.clear();
-        
+
         for (TypeDevice td : listTdv) {
             idList.add(td.getId());
             cbxTypeDev.addItem(td.getType());
         }
     }
-    
+
     private void fillStates() {
         List<String> states = repairCtrl.listRepairStates();
         cbxStateRepair.removeAllItems();
-        
+
         for (String state : states) {
             cbxStateRepair.addItem(state);
         }
     }
-    
+
     private void fillPaymentStates() {
         List<String> PaymentStates = repairCtrl.listRepairPaymentStates();
         cbxPaymentStateRep.removeAllItems();
-        
+
         for (String PaymentState : PaymentStates) {
             cbxPaymentStateRep.addItem(PaymentState);
         }
     }
-    
+
     private void loadRepairs() {
         repairCtrl.listRepairs(tblRepairs);
     }
-    
+
 
     private void btnClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientsActionPerformed
         jTabbedPane1.setSelectedIndex(1);
-        
+
         clearClient();
         clientCtrl.listClients(tblClients);
-        
+
         btnClients.setBackground(Color.WHITE);
         btnRegister.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
         btnRepairHistory.setBackground(MainBtns);
         btnSettings.setBackground(MainBtns);
         btnPayments.setBackground(MainBtns);
-        
+
         btnSaveClient.setEnabled(true);
         btnUpdateClient.setEnabled(false);
         btnDeleteClient.setEnabled(false);
@@ -1468,17 +1472,17 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         jTabbedPane1.setSelectedIndex(0);
-        
+
         clearRepair();
         fillStates();
         fillPaymentStates();
         repairCtrl.listRepairs(tblRepairs);
         btnRegister.setBackground(Color.WHITE);
-        
+
         btnSaveRep.setEnabled(true);
         btnUpdateRep.setEnabled(false);
         btnDeleteRep.setEnabled(false);
-        
+
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
         btnRepairHistory.setBackground(MainBtns);
@@ -1494,7 +1498,7 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveClient.setEnabled(false);
         btnUpdateClient.setEnabled(true);
         btnDeleteClient.setEnabled(true);
-        
+
         int fila = tblClients.rowAtPoint(evt.getPoint());
         txtIdClient.setText(tblClients.getValueAt(fila, 0).toString());
         txtNameClient.setText(tblClients.getValueAt(fila, 1).toString());
@@ -1515,15 +1519,15 @@ public class FormMain extends javax.swing.JFrame {
         fillTypeDevices();
         deviceCtrl.listDevices(tblDevices);
         clearDevice();
-        
+
         btnDevices.setBackground(Color.WHITE);
-        
+
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
         btnRepairHistory.setBackground(MainBtns);
         btnSettings.setBackground(MainBtns);
         btnPayments.setBackground(MainBtns);
-        
+
         btnSaveDevice.setEnabled(true);
         btnUpdateDevice.setEnabled(false);
         btnDeleteDevice.setEnabled(false);
@@ -1533,18 +1537,18 @@ public class FormMain extends javax.swing.JFrame {
         btnSaveDevice.setEnabled(false);
         btnUpdateDevice.setEnabled(true);
         btnDeleteDevice.setEnabled(true);
-        
+
         int fila = tblDevices.rowAtPoint(evt.getPoint());
-        
+
         txtIdDevice.setText(tblDevices.getValueAt(fila, 0).toString());
-        
+
         dv = deviceCtrl.searchIdCtrl(Integer.parseInt(txtIdDevice.getText()));
 //        System.out.println("dv" + dv);
 //        System.out.println("id" + txtIdDevice.getText());
 
         txtIdClientDev.setText(String.valueOf(dv.getIdClient()));
         txtNameClientDev.setText(dv.getClientName());
-        
+
         String typeDevice = dv.getTypeDevice();
         for (int i = 0; i < cbxTypeDev.getItemCount(); i++) {
             String item = cbxTypeDev.getItemAt(i);
@@ -1553,7 +1557,7 @@ public class FormMain extends javax.swing.JFrame {
                 break;
             }
         }
-        
+
         txtDevBrand.setText(dv.getBrand());
         txtModelDevice.setText(dv.getModel());
         txtSerieDev.setText(dv.getSerie_number());
@@ -1580,7 +1584,7 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnRepairHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepairHistoryActionPerformed
         jTabbedPane1.setSelectedIndex(3);
-        
+
         btnRepairHistory.setBackground(Color.WHITE);
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
@@ -1603,9 +1607,9 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnPaymentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentsActionPerformed
         jTabbedPane1.setSelectedIndex(4);
-        
+
         btnPayments.setBackground(Color.WHITE);
-        
+
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
@@ -1615,9 +1619,9 @@ public class FormMain extends javax.swing.JFrame {
 
     private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
         jTabbedPane1.setSelectedIndex(5);
-        
+
         btnSettings.setBackground(Color.WHITE);
-        
+
         btnRegister.setBackground(MainBtns);
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
@@ -1649,17 +1653,17 @@ public class FormMain extends javax.swing.JFrame {
         if ("".equals(txtIdClient.getText())) {
             msg.errorMessage("Seleccione una fila", "Actualizar Cliente");
         } else {
-            
+
             if (!"".equals(txtNameClient.getText()) || !"".equals(txtPhoneClient.getText())) {
                 cl.setName(txtNameClient.getText());
                 cl.setPhone(txtPhoneClient.getText());
                 cl.setAddress(txtAddressClient.getText());
                 cl.setId(Integer.parseInt(txtIdClient.getText()));
-                
+
                 clientCtrl.updateClient(cl);
                 clearClient();
                 clientCtrl.listClients(tblClients);
-                
+
                 btnSaveClient.setEnabled(true);
                 btnUpdateClient.setEnabled(false);
                 btnDeleteClient.setEnabled(false);
@@ -1674,11 +1678,11 @@ public class FormMain extends javax.swing.JFrame {
             cl.setName(txtNameClient.getText());
             cl.setPhone(txtPhoneClient.getText());
             cl.setAddress(txtAddressClient.getText());
-            
+
             clientCtrl.registerClient(cl);
             clearClient();
             clientCtrl.listClients(tblClients);
-            
+
             btnUpdateClient.setEnabled(false);
             btnDeleteClient.setEnabled(false);
             btnSaveClient.setEnabled(true);
@@ -1695,7 +1699,7 @@ public class FormMain extends javax.swing.JFrame {
                 clientCtrl.deleteClient(Integer.parseInt(txtIdClient.getText()));
                 clearClient();
                 clientCtrl.listClients(tblClients);
-                
+
                 btnSaveClient.setEnabled(true);
                 btnUpdateClient.setEnabled(false);
                 btnDeleteClient.setEnabled(false);
@@ -1705,12 +1709,12 @@ public class FormMain extends javax.swing.JFrame {
 
     private void tblRepairsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRepairsMouseClicked
         int fila = tblRepairs.rowAtPoint(evt.getPoint());
-        
+
         txtIdRepair.setText(tblRepairs.getValueAt(fila, 0).toString());
-        
+
         rep = repairCtrl.searchRepair(Integer.parseInt(txtIdRepair.getText()));
         System.out.println("repair " + rep);
-        
+
         txtIdDevRep.setText(String.valueOf(rep.getIdDevice()));
         txtNameClientRep.setText(rep.getClient());
         txtTypeDeviceRep.setText(rep.getDevice());
@@ -1719,10 +1723,10 @@ public class FormMain extends javax.swing.JFrame {
         txtPriceRep.setText(String.valueOf(rep.getPrice()));
         jdReceivedDate.setDate(rep.getReceivedDate());
         jdDeliveredDate.setDate(rep.getDeliveredDate());
-        
+
         cbxStateRepair.setSelectedItem(rep.getState().toString());
         cbxPaymentStateRep.setSelectedItem(rep.getPaymentState().toString());
-        
+
         btnSaveRep.setEnabled(false);
         btnUpdateRep.setEnabled(true);
         btnDeleteRep.setEnabled(true);
@@ -1736,11 +1740,11 @@ public class FormMain extends javax.swing.JFrame {
                 rep.setPrice(Double.parseDouble(txtPriceRep.getText()));
                 rep.setService(txtServiceRep.getText());
                 rep.setReceivedDate(jdReceivedDate.getDate());
-                
+
                 repairCtrl.addRepar(rep);
                 clearRepair();
                 repairCtrl.listRepairs(tblRepairs);
-                
+
                 btnSaveRep.setEnabled(true);
                 btnUpdateRep.setEnabled(false);
                 btnDeleteRep.setEnabled(false);
@@ -1756,7 +1760,7 @@ public class FormMain extends javax.swing.JFrame {
         if (!"".equals(txtDevBrand.getText())
                 || !"".equals(txtModelDevice.getText()) || !"".equals(txtProblemDev.getText())) {
             int selectedIndex = cbxTypeDev.getSelectedIndex();
-            
+
             if (selectedIndex != -1) {
                 // Obtener el ID correspondiente al índice seleccionado
                 int typeDeviceId = idList.get(selectedIndex);
@@ -1768,11 +1772,11 @@ public class FormMain extends javax.swing.JFrame {
                 dv.setSerie_number(txtSerieDev.getText());
                 dv.setColor(txtColorDev.getText());
                 dv.setProblem(txtProblemDev.getText());
-                
+
                 deviceCtrl.addDevice(dv);
                 clearDevice();
                 deviceCtrl.listDevices(tblDevices);
-                
+
                 btnSaveDevice.setEnabled(true);
                 btnUpdateDevice.setEnabled(false);
                 btnDeleteDevice.setEnabled(false);
@@ -1799,31 +1803,31 @@ public class FormMain extends javax.swing.JFrame {
         if (!"".equals(txtIdClientDev.getText()) && !"".equals(txtModelDevice.getText())
                 && !"".equals(txtDevBrand.getText()) && !"".equals(txtProblemDev.getText())
                 && !"".equals(txtIdDevice.getText())) {
-            
+
             Device dv = new Device();
             dv.setId(Integer.parseInt(txtIdDevice.getText()));
             dv.setIdClient(Integer.parseInt(txtIdClientDev.getText()));
-            
+
             int selectedIndex = cbxTypeDev.getSelectedIndex();
             if (selectedIndex != -1) {
-                
+
                 int typeDeviceId = idList.get(selectedIndex);
                 dv.setIdTypeDevice(typeDeviceId);
-                
+
                 dv.setBrand(txtDevBrand.getText());
                 dv.setModel(txtModelDevice.getText());
                 dv.setSerie_number(txtSerieDev.getText());
                 dv.setColor(txtColorDev.getText());
                 dv.setProblem(txtProblemDev.getText());
-                
+
                 deviceCtrl.updateDevice(dv);
                 clearDevice();
                 deviceCtrl.listDevices(tblDevices);
-                
+
                 btnSaveDevice.setEnabled(true);
                 btnUpdateDevice.setEnabled(false);
                 btnDeleteDevice.setEnabled(false);
-                
+
             } else {
                 msg.errorMessage("No se ha seleccionado ningún tipo de dispositivo", "Actualizar Dispositivo");
             }
@@ -1840,7 +1844,7 @@ public class FormMain extends javax.swing.JFrame {
                 deviceCtrl.deleteDevice(Integer.parseInt(txtIdDevice.getText()));
                 clearDevice();
                 deviceCtrl.listDevices(tblDevices);
-                
+
                 btnSaveDevice.setEnabled(true);
                 btnUpdateDevice.setEnabled(false);
                 btnDeleteDevice.setEnabled(false);
@@ -1865,31 +1869,31 @@ public class FormMain extends javax.swing.JFrame {
     private void btnUpdateRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRepActionPerformed
         if (!"".equals(txtIdRepair.getText()) && jdReceivedDate.getDate() != null
                 && !"".equals(txtServiceRep.getText()) && !"".equals(txtPriceRep.getText())) {
-            
+
             rep.setId(Integer.parseInt(txtIdRepair.getText()));
             rep.setIdDevice(Integer.parseInt(txtIdDevRep.getText()));
-            
+
             int selectedIndex = cbxStateRepair.getSelectedIndex();
             if (selectedIndex != -1) {
-                
+
                 rep.setService(txtServiceRep.getText());
                 rep.setPrice(Double.parseDouble(txtPriceRep.getText()));
                 rep.setReceivedDate(jdReceivedDate.getDate());
                 rep.setDeliveredDate(jdDeliveredDate.getDate());
-                
+
                 String selectedState = cbxStateRepair.getSelectedItem().toString();
                 rep.setState(Repair.Estado.fromString(selectedState));
                 String selectedPaymentState = cbxPaymentStateRep.getSelectedItem().toString();
                 rep.setPaymentState(Repair.EstadoPago.fromString(selectedPaymentState));
-                
+
                 repairCtrl.updateRepair(rep);
                 clearRepair();
                 repairCtrl.listRepairs(tblRepairs);
-                
+
                 btnSaveRep.setEnabled(true);
                 btnUpdateRep.setEnabled(false);
                 btnDeleteRep.setEnabled(false);
-                
+
             } else {
                 msg.errorMessage("No se ha seleccionado ningún tipo de estado", "Actualizar Reparación");
             }
@@ -1897,7 +1901,23 @@ public class FormMain extends javax.swing.JFrame {
             msg.infoMessage("Por favor, rellene todos los campos", "Actualizar Reparación");
         }
     }//GEN-LAST:event_btnUpdateRepActionPerformed
-    
+
+    private void btnDeleteRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRepActionPerformed
+        if (!"".equals(txtIdRepair.getText())) {
+            boolean reply = msg.confirmMessage("¿Estás seguro que deseas eliminar esta reparación?, \n"
+                    + "esta acción es irreversible", "Eliminar Reparación");
+            if (reply == true) {
+                repairCtrl.deleteRepair(Integer.parseInt(txtIdRepair.getText()));
+                clearRepair();
+                repairCtrl.listRepairs(tblRepairs);
+
+                btnSaveRep.setEnabled(true);
+                btnUpdateRep.setEnabled(false);
+                btnDeleteRep.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteRepActionPerformed
+
     private void clearRepair() {
         String t = "";
         fillStates();
@@ -1911,7 +1931,7 @@ public class FormMain extends javax.swing.JFrame {
         txtServiceRep.setText(t);
         txtPriceRep.setText(t);
     }
-    
+
     private void clearDevice() {
         String t = "";
         fillTypeDevices();
@@ -1924,7 +1944,7 @@ public class FormMain extends javax.swing.JFrame {
         txtColorDev.setText(t);
         txtProblemDev.setText(t);
     }
-    
+
     private void clearClient() {
         String t = "";
         txtIdClient.setText(t);

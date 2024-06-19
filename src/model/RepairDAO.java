@@ -155,6 +155,26 @@ public class RepairDAO {
         }
     }
 
+    public boolean deleteRepair(int id) {
+        String sql = "DELETE FROM reparaciones WHERE id_reparacion = ?";
+        try {
+            con = cn.getConnectDB();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.toString());
+            }
+        }
+    }
+
     public Repair searchRepair(int id) {
         Repair rep = new Repair();
         String sql = "SELECT r.id_reparacion, r.id_dispositivo, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, "
