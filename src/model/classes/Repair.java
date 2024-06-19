@@ -15,6 +15,8 @@ public class Repair {
 
     private int id;
     private int idDevice;
+    private String device;
+    private String problem;
     private String service;
     private double price;
     private Date receivedDate;
@@ -38,6 +40,15 @@ public class Repair {
         public String toString() {
             return this.estado;
         }
+
+        public static Estado fromString(String text) {
+            for (Estado e : Estado.values()) {
+                if (e.estado.equalsIgnoreCase(text)) {
+                    return e;
+                }
+            }
+            throw new IllegalArgumentException("No enum constant for value: " + text);
+        }
     }
 
     public enum EstadoPago {
@@ -55,14 +66,25 @@ public class Repair {
         public String toString() {
             return this.estadoPago;
         }
+
+        public static EstadoPago fromString(String text) {
+            for (EstadoPago e : EstadoPago.values()) {
+                if (e.estadoPago.equalsIgnoreCase(text)) {
+                    return e;
+                }
+            }
+            throw new IllegalArgumentException("No enum constant for value: " + text);
+        }
     }
 
     public Repair() {
     }
 
-    public Repair(int id, int idDevice, String service, double price, Date receivedDate, Date deliveredDate, Estado state, EstadoPago paymentState) {
+    public Repair(int id, int idDevice, String device, String problem, String service, double price, Date receivedDate, Date deliveredDate, Estado state, EstadoPago paymentState) {
         this.id = id;
         this.idDevice = idDevice;
+        this.device = device;
+        this.problem = problem;
         this.service = service;
         this.price = price;
         this.receivedDate = receivedDate;
@@ -85,6 +107,22 @@ public class Repair {
 
     public void setIdDevice(int idDevice) {
         this.idDevice = idDevice;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public String getProblem() {
+        return problem;
+    }
+
+    public void setProblem(String problem) {
+        this.problem = problem;
     }
 
     public String getService() {
@@ -133,20 +171,6 @@ public class Repair {
 
     public void setPaymentState(EstadoPago paymentState) {
         this.paymentState = paymentState;
-    }
-
-    @Override
-    public String toString() {
-        return "Repair{"
-                + "id=" + id
-                + ", idDevice=" + idDevice
-                + ", service='" + service + '\''
-                + ", price=" + price
-                + ", receivedDate=" + receivedDate
-                + ", deliveredDate=" + deliveredDate
-                + ", state=" + state
-                + ", paymentState=" + paymentState
-                + '}';
     }
 
 }

@@ -7,6 +7,7 @@ package view;
 
 import controller.ClientCtrl;
 import controller.DeviceCtrl;
+import controller.RepairCtrl;
 import controller.TypeDeviceCtrl;
 import controller.events.Messages;
 import java.awt.Color;
@@ -17,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import model.classes.Client;
 import model.classes.Combo;
 import model.classes.Device;
+import model.classes.Repair;
 import model.classes.TypeDevice;
 import model.classes.User;
 
@@ -32,6 +34,8 @@ public class FormMain extends javax.swing.JFrame {
     private DeviceCtrl deviceCtrl = new DeviceCtrl();
     private TypeDevice tdv = new TypeDevice();
     private TypeDeviceCtrl typeDvCtrl = new TypeDeviceCtrl();
+    private Repair rep = new Repair();
+    private RepairCtrl repairCtrl = new RepairCtrl();
     DefaultTableModel model = new DefaultTableModel();
     private final Messages msg = new Messages();
     private List<Integer> idList = new ArrayList();
@@ -44,6 +48,8 @@ public class FormMain extends javax.swing.JFrame {
         initComponents();
         lblUser.setText(user.getName());
         txtIdClient.setVisible(false);
+        fillStates();
+        loadRepairs();
     }
 
     /**
@@ -89,12 +95,15 @@ public class FormMain extends javax.swing.JFrame {
         btnCleanRep = new javax.swing.JButton();
         txtTypeDeviceRep = new javax.swing.JTextField();
         btnFinalize = new javax.swing.JButton();
-        jdFechaRecibo = new com.toedter.calendar.JDateChooser();
-        cbxEstadoRepair = new javax.swing.JComboBox<>();
+        jdReceivedDate = new com.toedter.calendar.JDateChooser();
+        cbxStateRepair = new javax.swing.JComboBox<>();
         jLabel30 = new javax.swing.JLabel();
         btnPendingRep = new javax.swing.JButton();
         btnSuccessRep = new javax.swing.JButton();
         btnCompleteRep = new javax.swing.JButton();
+        txtIdRepair = new javax.swing.JTextField();
+        txtProblemRep = new javax.swing.JTextField();
+        jLabel38 = new javax.swing.JLabel();
         jplClients = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClients = new javax.swing.JTable();
@@ -317,13 +326,13 @@ public class FormMain extends javax.swing.JFrame {
 
         tblRepairs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Dispositivo", "Problema", "Servicio", "Costo", "Fecha", "Fecha Entrega", "Estado"
+                "Id", "Id Dispositivo", "Dispositivo", "Problema", "Servicio", "Costo", "Fecha", "Fecha Entrega", "Estado", "Pago"
             }
         ));
         tblRepairs.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -334,11 +343,12 @@ public class FormMain extends javax.swing.JFrame {
         jScrollPane5.setViewportView(tblRepairs);
         if (tblRepairs.getColumnModel().getColumnCount() > 0) {
             tblRepairs.getColumnModel().getColumn(0).setPreferredWidth(5);
-            tblRepairs.getColumnModel().getColumn(4).setPreferredWidth(5);
+            tblRepairs.getColumnModel().getColumn(1).setPreferredWidth(7);
+            tblRepairs.getColumnModel().getColumn(5).setPreferredWidth(5);
         }
 
         jPanel6.setBackground(new java.awt.Color(103, 111, 125));
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dispositivos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Reparaciones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel6.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel20.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -364,6 +374,9 @@ public class FormMain extends javax.swing.JFrame {
         jLabel27.setText("Id Dispositivo:");
 
         txtIdDevRep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIdDevRepKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtIdDevRepKeyTyped(evt);
             }
@@ -415,7 +428,7 @@ public class FormMain extends javax.swing.JFrame {
         btnFinalize.setText("ENTREGAR");
         btnFinalize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        cbxEstadoRepair.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxStateRepair.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel30.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel30.setForeground(new java.awt.Color(255, 255, 255));
@@ -430,25 +443,37 @@ public class FormMain extends javax.swing.JFrame {
         btnCompleteRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/completado-24px.png"))); // NOI18N
         btnCompleteRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        txtProblemRep.setEditable(false);
+
+        jLabel38.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel38.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel38.setText("Problema:");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtNameClientRep, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE))))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                    .addComponent(txtNameClientRep, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtProblemRep))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -459,7 +484,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtServiceRep)
-                    .addComponent(jdFechaRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -468,7 +493,7 @@ public class FormMain extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel26)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbxEstadoRepair, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cbxStateRepair, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnFinalize, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel30)
@@ -491,12 +516,6 @@ public class FormMain extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel27))
-                        .addGap(3, 3, 3)
-                        .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -513,14 +532,7 @@ public class FormMain extends javax.swing.JFrame {
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel25)
                                     .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jdFechaRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel28)
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel29)
-                            .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(btnSaveRep)
                         .addGap(0, 0, 0)
@@ -532,7 +544,7 @@ public class FormMain extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxEstadoRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbxStateRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnFinalize)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -540,8 +552,32 @@ public class FormMain extends javax.swing.JFrame {
                             .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnPendingRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSuccessRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCompleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 7, Short.MAX_VALUE))
+                            .addComponent(btnCompleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel27))
+                                        .addGap(3, 3, 3))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                        .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                                .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(jLabel28)
+                                .addGap(12, 12, 12)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel29)
+                                    .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel38))))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jplRegisterLayout = new javax.swing.GroupLayout(jplRegister);
@@ -1316,7 +1352,6 @@ public class FormMain extends javax.swing.JFrame {
 //            i = i - 1;
 //        }
 //    }
-
     private void fillTypeDevices() {
         List<TypeDevice> listTdv = typeDvCtrl.listAllDevices();
         cbxTypeDev.removeAllItems();
@@ -1326,6 +1361,19 @@ public class FormMain extends javax.swing.JFrame {
             idList.add(td.getId());
             cbxTypeDev.addItem(td.getType());
         }
+    }
+
+    private void fillStates() {
+        List<String> states = repairCtrl.listRepairStates();
+        cbxStateRepair.removeAllItems();
+
+        for (String state : states) {
+            cbxStateRepair.addItem(state);
+        }
+    }
+
+    private void loadRepairs() {
+        repairCtrl.listRepairs(tblRepairs);
     }
 
 
@@ -1350,7 +1398,13 @@ public class FormMain extends javax.swing.JFrame {
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         jTabbedPane1.setSelectedIndex(0);
 
+        fillStates();
+        repairCtrl.listRepairs(tblRepairs);
         btnRegister.setBackground(Color.WHITE);
+
+        btnSaveRep.setEnabled(true);
+        btnUpdateRep.setEnabled(false);
+        btnDeleteRep.setEnabled(false);
 
         btnClients.setBackground(MainBtns);
         btnDevices.setBackground(MainBtns);
@@ -1388,7 +1442,7 @@ public class FormMain extends javax.swing.JFrame {
         fillTypeDevices();
         deviceCtrl.listDevices(tblDevices);
         clearDevice();
-        
+
         btnDevices.setBackground(Color.WHITE);
 
         btnRegister.setBackground(MainBtns);
@@ -1577,11 +1631,30 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_tblRepairsMouseClicked
 
     private void btnSaveRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveRepActionPerformed
+        if (!"".equals(txtIdDevRep.getText())) {
+            if (!"".equals(txtServiceRep.getText()) || !"".equals(txtPriceRep.getText())
+                    || jdReceivedDate.getDate() != null) {
+                rep.setIdDevice(Integer.parseInt(txtIdDevRep.getText()));
+                rep.setPrice(Double.parseDouble(txtPriceRep.getText()));
+                rep.setService(txtServiceRep.getText());
+                rep.setReceivedDate(jdReceivedDate.getDate());
 
+                repairCtrl.addRepar(rep);
+                clearRepair();
+                repairCtrl.listRepairs(tblRepairs);
+
+                btnSaveRep.setEnabled(true);
+                btnUpdateRep.setEnabled(false);
+                btnDeleteRep.setEnabled(false);
+            } else {
+                msg.infoMessage("Por favor, rellena todos los campos", "Agregar Reparación");
+            }
+        } else {
+            msg.warningMessage("Ingresa el ID del dispositivo", "Agregar Reparación");
+        }
     }//GEN-LAST:event_btnSaveRepActionPerformed
 
     private void btnSaveDeviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveDeviceActionPerformed
-
         if (!"".equals(txtDevBrand.getText())
                 || !"".equals(txtModelDevice.getText()) || !"".equals(txtProblemDev.getText())) {
             int selectedIndex = cbxTypeDev.getSelectedIndex();
@@ -1680,6 +1753,30 @@ public class FormMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteDeviceActionPerformed
 
+    private void txtIdDevRepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdDevRepKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (!"".equals(txtIdDevRep.getText())) {
+                dv = deviceCtrl.searchIdCtrl(Integer.parseInt(txtIdDevRep.getText()));
+                txtNameClientRep.setText(dv.getClientName());
+                txtTypeDeviceRep.setText(dv.getTypeDevice());
+                txtProblemRep.setText(dv.getProblem());
+                jdReceivedDate.requestFocus();
+            } else {
+                msg.warningMessage("Debe ingresar un dispositivo para la reparación", "Agregar Reparación");
+            }
+        }
+    }//GEN-LAST:event_txtIdDevRepKeyPressed
+
+    private void clearRepair() {
+        String t = "";
+        txtIdRepair.setText(t);
+        txtNameClientRep.setText(t);
+        txtTypeDeviceRep.setText(t);
+        jdReceivedDate.setDate(null);
+        txtServiceRep.setText(t);
+        txtPriceRep.setText(t);
+    }
+
     private void clearDevice() {
         String t = "";
 
@@ -1766,8 +1863,8 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdatePayment;
     private javax.swing.JButton btnUpdateRep;
     private javax.swing.JButton btnUpdateSett;
-    private javax.swing.JComboBox<String> cbxEstadoRepair;
     private javax.swing.JComboBox<String> cbxPaymentMethod;
+    private javax.swing.JComboBox<String> cbxStateRepair;
     private javax.swing.JComboBox<String> cbxTypeDev;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
@@ -1797,6 +1894,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1816,7 +1914,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea3;
     private com.toedter.calendar.JDateChooser jdDatePay;
-    private com.toedter.calendar.JDateChooser jdFechaRecibo;
+    private com.toedter.calendar.JDateChooser jdReceivedDate;
     private javax.swing.JPanel jplClients;
     private javax.swing.JPanel jplDevices;
     private javax.swing.JPanel jplHeader;
@@ -1838,6 +1936,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTextField txtIdDevRep;
     private javax.swing.JTextField txtIdDevice;
     private javax.swing.JTextField txtIdRepPayment;
+    private javax.swing.JTextField txtIdRepair;
     private javax.swing.JTextField txtModelDevice;
     private javax.swing.JTextField txtNameClient;
     private javax.swing.JTextField txtNameClient1;
@@ -1847,6 +1946,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTextField txtPhoneClient;
     private javax.swing.JTextField txtPriceRep;
     private javax.swing.JTextArea txtProblemDev;
+    private javax.swing.JTextField txtProblemRep;
     private javax.swing.JTextField txtSerieDev;
     private javax.swing.JTextField txtServiceRep;
     private javax.swing.JTextField txtTypeDeviceRep;
