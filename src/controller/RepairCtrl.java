@@ -55,6 +55,30 @@ public class RepairCtrl {
         tblRepairs.setModel(model);
     }
 
+    public void listRepairsByState(JTable tblRepairs, String estado) {
+        List<Repair> listarReparaciones = repairDAO.selectRepairsByStatus(estado);
+        DefaultTableModel model = (DefaultTableModel) tblRepairs.getModel();
+        model.setRowCount(0); // Limpiar la tabla antes de agregar nuevas filas
+
+        Object[] ob = new Object[11]; // Ajusta el tamaño del arreglo a 11 para incluir abonado
+        for (Repair repair : listarReparaciones) {
+            ob[0] = repair.getId();
+            ob[1] = repair.getIdDevice();
+            ob[2] = repair.getDevice();
+            ob[3] = repair.getProblem();
+            ob[4] = repair.getService();
+            ob[5] = repair.getPrice();
+            ob[6] = repair.getAbonado();
+            ob[7] = repair.getReceivedDate();
+            ob[8] = repair.getDeliveredDate();
+            ob[9] = repair.getState();
+            ob[10] = repair.getPaymentState();
+            model.addRow(ob);
+        }
+
+        tblRepairs.setModel(model);
+    }
+
     public List<String> listRepairStates() {
         return repairDAO.getRepairStates();
     }

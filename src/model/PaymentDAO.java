@@ -34,10 +34,10 @@ public class PaymentDAO {
 
         try {
             con = cn.getConnectDB();
-            // transacción
+            // Iniciar transacción
             con.setAutoCommit(false);
 
-            // Obtener costo total de la reparación
+            // Obtener el costo total de la reparación
             double totalCost;
             try (PreparedStatement psGetCost = con.prepareStatement(sqlGetRepairCost)) {
                 psGetCost.setInt(1, payment.getIdRepair());
@@ -51,7 +51,7 @@ public class PaymentDAO {
                 }
             }
 
-            // Obtener total pagado hasta ahora
+            // Obtener el total pagado hasta ahora
             double totalPaid;
             try (PreparedStatement psGetTotalPaid = con.prepareStatement(sqlGetTotalPaid)) {
                 psGetTotalPaid.setInt(1, payment.getIdRepair());
@@ -65,40 +65,55 @@ public class PaymentDAO {
                 }
             }
 
-            // Verificar si la reparación ya está completamente pagada
-            if (totalPaid >= totalCost) {
+            // Calcular el monto restante
+            double amountRemaining = totalCost - totalPaid;
+            if (amountRemaining <= 0) {
                 msg.infoMessage("La reparación ya está pagada en su totalidad.", "Agregar Pago");
                 return false;
+            }
+
+            // Calcular el excedente si el pago es mayor al monto restante
+            double paymentAmount = payment.getAmount();
+            double amountToRefund = 0;
+            if (paymentAmount > amountRemaining) {
+                amountToRefund = paymentAmount - amountRemaining;
+                // Ajustar el monto del pago al saldo restante
+                paymentAmount = amountRemaining;
             }
 
             // Insertar el nuevo pago
             try (PreparedStatement psInsertPayment = con.prepareStatement(sqlInsertPayment)) {
                 psInsertPayment.setInt(1, payment.getIdRepair());
-                psInsertPayment.setDouble(2, payment.getAmount());
+                psInsertPayment.setDouble(2, paymentAmount); // Usar el monto ajustado
                 psInsertPayment.setDate(3, new java.sql.Date(payment.getPaymentDate().getTime()));
                 psInsertPayment.setString(4, payment.getPaymentMethod().toString());
                 psInsertPayment.executeUpdate();
             }
 
-            // Llamar al procedimiento almacenado para actualizar el estado de pago
+            // Llamar al procedimiento almacenado para actualizar el estado del pago
             try (PreparedStatement psUpdatePaymentStatus = con.prepareStatement(sqlCallUpdatePaymentStatus)) {
                 psUpdatePaymentStatus.setInt(1, payment.getIdRepair());
                 psUpdatePaymentStatus.executeUpdate();
             }
 
-            // Confirmar la transacción
+            // Confirmar transacción
             con.commit();
 
-            // Calcular el nuevo total pagado y el monto restante o excedente
-            double newTotalPaid = totalPaid + payment.getAmount();
-            double amountRemaining = totalCost - newTotalPaid;
+            // Calcular el nuevo total pagado y el monto restante
+            double newTotalPaid = totalPaid + paymentAmount;
+            amountRemaining = totalCost - newTotalPaid;
 
             if (amountRemaining > 0) {
                 msg.infoMessage("Pago registrado. Resta por pagar: $" + amountRemaining, "Agregar Pago");
             } else if (amountRemaining < 0) {
                 msg.infoMessage("Pago registrado. Excedente a devolver: $" + Math.abs(amountRemaining), "Agregar Pago");
             } else {
-                msg.infoMessage("Pago completado. El estado de la reparación ha sido actualizado a 'Pagado'.", "Agregar Pago");
+                msg.successfulMessage("Pago completado. El estado de la reparación ha sido actualizado a 'Pagado'.", "Agregar Pago");
+            }
+
+            // Mostrar mensaje de devolución si hubo un excedente
+            if (amountToRefund > 0) {
+                msg.infoMessage("Pago registrado. Excedente a devolver: $" + amountToRefund, "Agregar Pago");
             }
 
             return true;

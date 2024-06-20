@@ -90,6 +90,47 @@ public class RepairDAO {
         return repairs;
     }
 
+    public List<Repair> selectRepairsByStatus(String estado) {
+        List<Repair> repairs = new ArrayList<>();
+        String sql = "SELECT r.id_reparacion, r.id_dispositivo, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, "
+                + "r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago, "
+                + "COALESCE((SELECT SUM(monto) FROM pagos WHERE pagos.id_reparacion = r.id_reparacion), 0) AS abonado "
+                + "FROM reparaciones r "
+                + "JOIN dispositivos d ON r.id_dispositivo = d.id_dispositivo "
+                + "JOIN tipos_dispositivos td ON d.id_tipo_dispositivo = td.id_tipo_dispositivo "
+                + "WHERE r.estado = ?";
+        try {
+            con = cn.getConnectDB();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, estado);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Repair repair = new Repair();
+                repair.setId(rs.getInt("id_reparacion"));
+                repair.setIdDevice(rs.getInt("id_dispositivo"));
+                repair.setDevice(rs.getString("dispositivo"));
+                repair.setProblem(rs.getString("problema"));
+                repair.setService(rs.getString("servicio"));
+                repair.setPrice(rs.getDouble("costo"));
+                repair.setAbonado(rs.getDouble("abonado")); // Asigna el valor de abonado
+                repair.setReceivedDate(rs.getDate("fecha_recepcion"));
+                repair.setDeliveredDate(rs.getDate("fecha_entrega"));
+                repair.setState(Repair.Estado.fromString(rs.getString("estado")));
+                repair.setPaymentState(Repair.EstadoPago.fromString(rs.getString("estado_pago")));
+                repairs.add(repair);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.toString());
+            }
+        }
+        return repairs;
+    }
+
     public List<String> getRepairStates() {
         List<String> states = new ArrayList<>();
         String sql = "SHOW COLUMNS FROM reparaciones LIKE 'estado'";

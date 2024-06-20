@@ -372,9 +372,21 @@ public class FormMain extends javax.swing.JFrame {
         jLabel24.setForeground(new java.awt.Color(255, 255, 255));
         jLabel24.setText("Servicio:");
 
+        txtServiceRep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtServiceRepKeyPressed(evt);
+            }
+        });
+
         jLabel25.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(255, 255, 255));
         jLabel25.setText("Costo:");
+
+        txtPriceRep.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPriceRepKeyTyped(evt);
+            }
+        });
 
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -462,12 +474,27 @@ public class FormMain extends javax.swing.JFrame {
 
         btnPendingRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pendiente-24px.png"))); // NOI18N
         btnPendingRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPendingRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPendingRepActionPerformed(evt);
+            }
+        });
 
         btnSuccessRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/entregado-24px.png"))); // NOI18N
         btnSuccessRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSuccessRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuccessRepActionPerformed(evt);
+            }
+        });
 
         btnCompleteRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/completado-24px.png"))); // NOI18N
         btnCompleteRep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCompleteRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompleteRepActionPerformed(evt);
+            }
+        });
 
         txtProblemRep.setEditable(false);
 
@@ -664,12 +691,12 @@ public class FormMain extends javax.swing.JFrame {
                 .addGroup(jplRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane5))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jplRegisterLayout.setVerticalGroup(
             jplRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jplRegisterLayout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -718,6 +745,12 @@ public class FormMain extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Télefono:");
+
+        txtPhoneClient.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPhoneClientKeyPressed(evt);
+            }
+        });
 
         jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
@@ -862,13 +895,31 @@ public class FormMain extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Marca:");
 
+        txtDevBrand.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDevBrandKeyPressed(evt);
+            }
+        });
+
         jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Modelo:");
 
+        txtModelDevice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtModelDeviceKeyPressed(evt);
+            }
+        });
+
         jLabel18.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
         jLabel18.setText("Número de Serie:");
+
+        txtSerieDev.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSerieDevKeyPressed(evt);
+            }
+        });
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -1129,6 +1180,9 @@ public class FormMain extends javax.swing.JFrame {
         jLabel31.setText("Id Reparación:");
 
         txtIdRepPayment.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIdRepPaymentKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtIdRepPaymentKeyTyped(evt);
             }
@@ -1706,7 +1760,12 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_tblPaymentsMouseClicked
 
     private void txtAmountPayKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmountPayKeyTyped
-        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if ((car < '0' || car > '9') && txtAmountPay.getText().contains(".") && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        } else if ((car < '0' || car > '9') && (car != '.') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtAmountPayKeyTyped
 
     private void txtNameClient1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameClient1KeyTyped
@@ -2058,6 +2117,75 @@ public class FormMain extends javax.swing.JFrame {
         new FormPay(rep).setVisible(true);
     }//GEN-LAST:event_btnPayActionPerformed
 
+    private void btnPendingRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPendingRepActionPerformed
+        clearRepair();
+        repairCtrl.listRepairsByState(tblRepairs, "Pendiente");
+        btnSaveRep.setEnabled(true);
+        btnUpdateRep.setEnabled(false);
+        btnDeleteRep.setEnabled(false);
+    }//GEN-LAST:event_btnPendingRepActionPerformed
+
+    private void btnCompleteRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteRepActionPerformed
+        clearRepair();
+        repairCtrl.listRepairsByState(tblRepairs, "Completado");
+        btnSaveRep.setEnabled(true);
+        btnUpdateRep.setEnabled(false);
+        btnDeleteRep.setEnabled(false);
+    }//GEN-LAST:event_btnCompleteRepActionPerformed
+
+    private void btnSuccessRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuccessRepActionPerformed
+        clearRepair();
+        repairCtrl.listRepairsByState(tblRepairs, "Entregado");
+        btnSaveRep.setEnabled(true);
+        btnUpdateRep.setEnabled(false);
+        btnDeleteRep.setEnabled(false);
+    }//GEN-LAST:event_btnSuccessRepActionPerformed
+
+    private void txtServiceRepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtServiceRepKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtPriceRep.requestFocus();
+        }
+    }//GEN-LAST:event_txtServiceRepKeyPressed
+
+    private void txtPhoneClientKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneClientKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtAddressClient.requestFocus();
+        }
+    }//GEN-LAST:event_txtPhoneClientKeyPressed
+
+    private void txtDevBrandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDevBrandKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtModelDevice.requestFocus();
+        }
+    }//GEN-LAST:event_txtDevBrandKeyPressed
+
+    private void txtModelDeviceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtModelDeviceKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtSerieDev.requestFocus();
+        }
+    }//GEN-LAST:event_txtModelDeviceKeyPressed
+
+    private void txtSerieDevKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSerieDevKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtColorDev.requestFocus();
+        }
+    }//GEN-LAST:event_txtSerieDevKeyPressed
+
+    private void txtIdRepPaymentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdRepPaymentKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtAmountPay.requestFocus();
+        }
+    }//GEN-LAST:event_txtIdRepPaymentKeyPressed
+
+    private void txtPriceRepKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPriceRepKeyTyped
+        char car = evt.getKeyChar();
+        if ((car < '0' || car > '9') && txtPriceRep.getText().contains(".") && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        } else if ((car < '0' || car > '9') && (car != '.') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPriceRepKeyTyped
+
     private void clearPayment() {
         String t = "";
         txtIdRepPayment.setText(t);
@@ -2070,6 +2198,7 @@ public class FormMain extends javax.swing.JFrame {
     private void clearRepair() {
         String t = "";
         fillStates();
+        fillPaymentStates();
         txtIdRepair.setText(t);
         txtIdDevRep.setText(t);
         txtNameClientRep.setText(t);
