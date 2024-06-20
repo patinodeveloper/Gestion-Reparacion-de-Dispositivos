@@ -101,7 +101,7 @@ public class FormMain extends javax.swing.JFrame {
         btnDeleteRep = new javax.swing.JButton();
         btnCleanRep = new javax.swing.JButton();
         txtTypeDeviceRep = new javax.swing.JTextField();
-        btnFinalize = new javax.swing.JButton();
+        btnPay = new javax.swing.JButton();
         jdReceivedDate = new com.toedter.calendar.JDateChooser();
         cbxStateRepair = new javax.swing.JComboBox<>();
         jLabel30 = new javax.swing.JLabel();
@@ -338,13 +338,13 @@ public class FormMain extends javax.swing.JFrame {
 
         tblRepairs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Id Dispositivo", "Dispositivo", "Problema", "Servicio", "Costo", "Fecha", "Fecha Entrega", "Estado", "Pago"
+                "Id", "Id Dispositivo", "Dispositivo", "Problema", "Servicio", "Costo", "Abonado", "Recibido", "Entregado", "Estado", "Pago"
             }
         ));
         tblRepairs.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -356,7 +356,8 @@ public class FormMain extends javax.swing.JFrame {
         if (tblRepairs.getColumnModel().getColumnCount() > 0) {
             tblRepairs.getColumnModel().getColumn(0).setPreferredWidth(5);
             tblRepairs.getColumnModel().getColumn(1).setPreferredWidth(7);
-            tblRepairs.getColumnModel().getColumn(5).setPreferredWidth(5);
+            tblRepairs.getColumnModel().getColumn(5).setPreferredWidth(25);
+            tblRepairs.getColumnModel().getColumn(6).setPreferredWidth(25);
         }
 
         jPanel6.setBackground(new java.awt.Color(103, 111, 125));
@@ -444,9 +445,14 @@ public class FormMain extends javax.swing.JFrame {
 
         txtTypeDeviceRep.setEditable(false);
 
-        btnFinalize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/entregar-24px.png"))); // NOI18N
-        btnFinalize.setText("ENTREGAR");
-        btnFinalize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pagar-24px.png"))); // NOI18N
+        btnPay.setText("PAGAR");
+        btnPay.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPayActionPerformed(evt);
+            }
+        });
 
         cbxStateRepair.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -545,7 +551,7 @@ public class FormMain extends javax.swing.JFrame {
                                     .addComponent(cbxPaymentStateRep, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbxStateRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(btnFinalize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnPay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnSaveRep, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -594,7 +600,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnPendingRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSuccessRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCompleteRep, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -612,7 +618,7 @@ public class FormMain extends javax.swing.JFrame {
                                 .addComponent(btnUpdateRep)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnFinalize)
+                            .addComponent(btnPay)
                             .addComponent(btnDeleteRep))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2036,6 +2042,22 @@ public class FormMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeletePaymentActionPerformed
 
+    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
+
+        int selectedRow = tblRepairs.getSelectedRow();
+
+        if (selectedRow == -1) {
+
+            msg.infoMessage("Por favor, selecciona una reparación a pagar", "Agregar Pago");
+            return;
+        }
+
+        int repairId = (int) tblRepairs.getValueAt(selectedRow, 0);
+        rep = repairCtrl.searchRepair(repairId);
+
+        new FormPay(rep).setVisible(true);
+    }//GEN-LAST:event_btnPayActionPerformed
+
     private void clearPayment() {
         String t = "";
         txtIdRepPayment.setText(t);
@@ -2127,7 +2149,7 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JButton btnDeletePayment;
     private javax.swing.JButton btnDeleteRep;
     private javax.swing.JButton btnDevices;
-    private javax.swing.JButton btnFinalize;
+    private javax.swing.JButton btnPay;
     private javax.swing.JButton btnPayments;
     private javax.swing.JButton btnPendingRep;
     private javax.swing.JButton btnRegister;

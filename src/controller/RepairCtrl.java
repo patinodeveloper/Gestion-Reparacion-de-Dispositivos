@@ -31,27 +31,27 @@ public class RepairCtrl {
     }
 
     public void listRepairs(JTable tblRepairs) {
-        List<Repair> ListarCl = repairDAO.selectAllRepairs();
-        DefaultTableModel model = new DefaultTableModel();
-        model = (DefaultTableModel) tblRepairs.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            model.removeRow(i);
-            i = i - 1;
+        List<Repair> listRepairs = repairDAO.selectAllRepairs();
+        DefaultTableModel model = (DefaultTableModel) tblRepairs.getModel();
+        model.setRowCount(0);
+
+        for (Repair repair : listRepairs) {
+            Object[] rowData = new Object[11];
+            rowData[0] = repair.getId();
+            rowData[1] = repair.getIdDevice();
+            rowData[2] = repair.getDevice();
+            rowData[3] = repair.getProblem();
+            rowData[4] = repair.getService();
+            rowData[5] = repair.getPrice();
+            rowData[6] = repair.getAbonado();
+            rowData[7] = repair.getReceivedDate();
+            rowData[8] = repair.getDeliveredDate();
+            rowData[9] = repair.getState();
+            rowData[10] = repair.getPaymentState();
+
+            model.addRow(rowData);
         }
-        Object[] ob = new Object[10];
-        for (int i = 0; i < ListarCl.size(); i++) {
-            ob[0] = ListarCl.get(i).getId();
-            ob[1] = ListarCl.get(i).getIdDevice();
-            ob[2] = ListarCl.get(i).getDevice();
-            ob[3] = ListarCl.get(i).getProblem();
-            ob[4] = ListarCl.get(i).getService();
-            ob[5] = ListarCl.get(i).getPrice();
-            ob[6] = ListarCl.get(i).getReceivedDate();
-            ob[7] = ListarCl.get(i).getDeliveredDate();
-            ob[8] = ListarCl.get(i).getState();
-            ob[9] = ListarCl.get(i).getPaymentState();
-            model.addRow(ob);
-        }
+
         tblRepairs.setModel(model);
     }
 

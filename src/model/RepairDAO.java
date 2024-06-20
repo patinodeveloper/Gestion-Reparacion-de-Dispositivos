@@ -54,7 +54,8 @@ public class RepairDAO {
 
     public List<Repair> selectAllRepairs() {
         List<Repair> repairs = new ArrayList<>();
-        String sql = "SELECT r.id_reparacion, r.id_dispositivo, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago "
+        String sql = "SELECT r.id_reparacion, r.id_dispositivo, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago, "
+                + "COALESCE((SELECT SUM(monto) FROM pagos WHERE pagos.id_reparacion = r.id_reparacion), 0) AS abonado "
                 + "FROM reparaciones r "
                 + "JOIN dispositivos d ON r.id_dispositivo = d.id_dispositivo "
                 + "JOIN tipos_dispositivos td ON d.id_tipo_dispositivo = td.id_tipo_dispositivo";
@@ -70,6 +71,7 @@ public class RepairDAO {
                 repair.setProblem(rs.getString("problema"));
                 repair.setService(rs.getString("servicio"));
                 repair.setPrice(rs.getDouble("costo"));
+                repair.setAbonado(rs.getDouble("abonado"));
                 repair.setReceivedDate(rs.getDate("fecha_recepcion"));
                 repair.setDeliveredDate(rs.getDate("fecha_entrega"));
                 repair.setState(Repair.Estado.fromString(rs.getString("estado")));
@@ -178,12 +180,14 @@ public class RepairDAO {
     public Repair searchRepair(int id) {
         Repair rep = new Repair();
         String sql = "SELECT r.id_reparacion, r.id_dispositivo, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, "
-                + "r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago, c.nombre AS nombre_cliente "
+                + "r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago, c.nombre AS nombre_cliente, "
+                + "COALESCE(SUM(p.monto), 0) AS abonado "
                 + "FROM reparaciones r "
                 + "JOIN dispositivos d ON r.id_dispositivo = d.id_dispositivo "
                 + "JOIN tipos_dispositivos td ON d.id_tipo_dispositivo = td.id_tipo_dispositivo "
                 + "JOIN clientes c ON d.id_cliente = c.id_cliente "
-                + "WHERE r.id_reparacion = ?";
+                + "LEFT JOIN pagos p ON r.id_reparacion = p.id_reparacion "
+                + "WHERE r.id_reparacion = ? ";
 
         try {
             con = cn.getConnectDB();
@@ -199,6 +203,7 @@ public class RepairDAO {
                 rep.setProblem(rs.getString("problema"));
                 rep.setService(rs.getString("servicio"));
                 rep.setPrice(rs.getDouble("costo"));
+                rep.setAbonado(rs.getDouble("abonado"));
                 rep.setReceivedDate(rs.getDate("fecha_recepcion"));
                 rep.setDeliveredDate(rs.getDate("fecha_entrega"));
 

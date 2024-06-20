@@ -20,6 +20,7 @@ public class Repair {
     private String problem;
     private String service;
     private double price;
+    private double abonado;
     private Date receivedDate;
     private Date deliveredDate;
     private Estado state;
@@ -81,7 +82,7 @@ public class Repair {
     public Repair() {
     }
 
-    public Repair(int id, int idDevice, String device, String client, String problem, String service, double price, Date receivedDate, Date deliveredDate, Estado state, EstadoPago paymentState) {
+    public Repair(int id, int idDevice, String device, String client, String problem, String service, double price, double abonado, Date receivedDate, Date deliveredDate, Estado state, EstadoPago paymentState) {
         this.id = id;
         this.idDevice = idDevice;
         this.device = device;
@@ -89,6 +90,7 @@ public class Repair {
         this.problem = problem;
         this.service = service;
         this.price = price;
+        this.abonado = abonado;
         this.receivedDate = receivedDate;
         this.deliveredDate = deliveredDate;
         this.state = state;
@@ -151,6 +153,14 @@ public class Repair {
         this.price = price;
     }
 
+    public double getAbonado() {
+        return abonado;
+    }
+
+    public void setAbonado(double abonado) {
+        this.abonado = abonado;
+    }
+
     public Date getReceivedDate() {
         return receivedDate;
     }
@@ -185,7 +195,7 @@ public class Repair {
 
     @Override
     public String toString() {
-        return "Repair{" + "id=" + id + ", idDevice=" + idDevice + ", device=" + device + ", client=" + client + ", problem=" + problem + ", service=" + service + ", price=" + price + ", receivedDate=" + receivedDate + ", deliveredDate=" + deliveredDate + ", state=" + state + ", paymentState=" + paymentState + '}';
+        return "Repair{" + "id=" + id + ", idDevice=" + idDevice + ", device=" + device + ", client=" + client + ", problem=" + problem + ", service=" + service + ", price=" + price + ", abonado=" + abonado + ", receivedDate=" + receivedDate + ", deliveredDate=" + deliveredDate + ", state=" + state + ", paymentState=" + paymentState + '}';
     }
 
 }
