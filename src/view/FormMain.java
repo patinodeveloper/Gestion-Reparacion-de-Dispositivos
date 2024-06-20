@@ -7,6 +7,7 @@ package view;
 
 import controller.ClientCtrl;
 import controller.DeviceCtrl;
+import controller.PaymentCtrl;
 import controller.RepairCtrl;
 import controller.TypeDeviceCtrl;
 import controller.events.Messages;
@@ -17,6 +18,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.classes.Client;
 import model.classes.Device;
+import model.classes.Payment;
 import model.classes.Repair;
 import model.classes.TypeDevice;
 import model.classes.User;
@@ -35,6 +37,8 @@ public class FormMain extends javax.swing.JFrame {
     private TypeDeviceCtrl typeDvCtrl = new TypeDeviceCtrl();
     private Repair rep = new Repair();
     private RepairCtrl repairCtrl = new RepairCtrl();
+    private Payment payment = new Payment();
+    private PaymentCtrl paymentCtrl = new PaymentCtrl();
     DefaultTableModel model = new DefaultTableModel();
     private final Messages msg = new Messages();
     private List<Integer> idList = new ArrayList();
@@ -49,6 +53,7 @@ public class FormMain extends javax.swing.JFrame {
         txtIdClient.setVisible(false);
         txtIdDevice.setVisible(false);
         txtIdRepair.setVisible(false);
+        txtIdPayment.setVisible(false);
         fillStates();
         fillPaymentStates();
         loadRepairs();
@@ -167,9 +172,10 @@ public class FormMain extends javax.swing.JFrame {
         btnDeletePayment = new javax.swing.JButton();
         btnCleanPayment = new javax.swing.JButton();
         jdDatePay = new com.toedter.calendar.JDateChooser();
-        btnAmountPay = new javax.swing.JTextField();
+        txtAmountPay = new javax.swing.JTextField();
         jLabel34 = new javax.swing.JLabel();
         cbxPaymentMethod = new javax.swing.JComboBox<>();
+        txtIdPayment = new javax.swing.JTextField();
         jScrollPane7 = new javax.swing.JScrollPane();
         tblPayments = new javax.swing.JTable();
         jplSettings = new javax.swing.JPanel();
@@ -478,7 +484,7 @@ public class FormMain extends javax.swing.JFrame {
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -486,23 +492,22 @@ public class FormMain extends javax.swing.JFrame {
                             .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel6Layout.createSequentialGroup()
+                                    .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                                    .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(14, 14, 14)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -524,7 +529,7 @@ public class FormMain extends javax.swing.JFrame {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 3, Short.MAX_VALUE)))
+                        .addGap(0, 1, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -561,22 +566,22 @@ public class FormMain extends javax.swing.JFrame {
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel27))
-                                .addGap(3, 3, 3))
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtIdDevRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel27))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                                 .addComponent(txtIdRepair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, Short.MAX_VALUE)
+                        .addComponent(txtNameClientRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(40, 40, 40)
-                        .addComponent(jLabel28)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel28)
+                        .addGap(13, 13, 13)))
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel29)
                     .addComponent(txtTypeDeviceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -585,34 +590,6 @@ public class FormMain extends javax.swing.JFrame {
                     .addComponent(txtProblemRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel38))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator3)
-                .addContainerGap())
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel20)
-                    .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(lblDeliveredState))
-                    .addComponent(jdDeliveredDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtServiceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel25))
-                .addGap(23, 23, 23))
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addComponent(jSeparator4)
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
@@ -642,6 +619,34 @@ public class FormMain extends javax.swing.JFrame {
                             .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCleanRep))))
                 .addGap(22, 22, 22))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jSeparator3)
+                        .addContainerGap())
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jSeparator4)
+                        .addContainerGap())
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel20)
+                            .addComponent(jdReceivedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(lblDeliveredState))
+                            .addComponent(jdDeliveredDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtServiceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel24))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPriceRep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel25))
+                        .addGap(23, 23, 23))))
         );
 
         javax.swing.GroupLayout jplRegisterLayout = new javax.swing.GroupLayout(jplRegister);
@@ -1134,14 +1139,29 @@ public class FormMain extends javax.swing.JFrame {
         btnSavePayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save-24px.png"))); // NOI18N
         btnSavePayment.setText("GUARDAR");
         btnSavePayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSavePayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSavePaymentActionPerformed(evt);
+            }
+        });
 
         btnUpdatePayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/update-16px.png"))); // NOI18N
         btnUpdatePayment.setText("ACTUALIZAR");
         btnUpdatePayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdatePayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdatePaymentActionPerformed(evt);
+            }
+        });
 
         btnDeletePayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete-24px.png"))); // NOI18N
         btnDeletePayment.setText("ELIMINAR");
         btnDeletePayment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeletePayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletePaymentActionPerformed(evt);
+            }
+        });
 
         btnCleanPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/remove-24px.png"))); // NOI18N
         btnCleanPayment.setText("LIMPIAR");
@@ -1152,9 +1172,9 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
-        btnAmountPay.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtAmountPay.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                btnAmountPayKeyTyped(evt);
+                txtAmountPayKeyTyped(evt);
             }
         });
 
@@ -1183,17 +1203,19 @@ public class FormMain extends javax.swing.JFrame {
                         .addComponent(jLabel31)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtIdRepPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(150, 150, 150))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtIdPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(114, 114, 114))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel32)
                         .addGap(18, 18, 18)
-                        .addComponent(jdDatePay, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jdDatePay, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAmountPay))
+                                .addComponent(txtAmountPay))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btnSavePayment, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1207,7 +1229,8 @@ public class FormMain extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtIdRepPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIdRepPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jdDatePay, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
@@ -1215,7 +1238,7 @@ public class FormMain extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAmountPay, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAmountPay, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1447,6 +1470,15 @@ public class FormMain extends javax.swing.JFrame {
         }
     }
 
+    private void fillPaymentMethods() {
+        List<String> paymentMethods = paymentCtrl.listPaymentMethods();
+        cbxPaymentMethod.removeAllItems();
+
+        for (String paymentMethod : paymentMethods) {
+            cbxPaymentMethod.addItem(paymentMethod);
+        }
+    }
+
     private void loadRepairs() {
         repairCtrl.listRepairs(tblRepairs);
     }
@@ -1608,6 +1640,12 @@ public class FormMain extends javax.swing.JFrame {
     private void btnPaymentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentsActionPerformed
         jTabbedPane1.setSelectedIndex(4);
 
+        clearPayment();
+        paymentCtrl.listPayments(tblPayments);
+        btnSavePayment.setEnabled(true);
+        btnUpdatePayment.setEnabled(false);
+        btnDeletePayment.setEnabled(false);
+
         btnPayments.setBackground(Color.WHITE);
 
         btnRegister.setBackground(MainBtns);
@@ -1634,16 +1672,36 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdRepPaymentKeyTyped
 
     private void btnCleanPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanPaymentActionPerformed
-        // TODO add your handling code here:
+        clearPayment();
+        paymentCtrl.listPayments(tblPayments);
+
+        btnSavePayment.setEnabled(true);
+        btnUpdatePayment.setEnabled(false);
+        btnDeletePayment.setEnabled(false);
     }//GEN-LAST:event_btnCleanPaymentActionPerformed
 
     private void tblPaymentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaymentsMouseClicked
-        // TODO add your handling code here:
+        btnSavePayment.setEnabled(false);
+        btnUpdatePayment.setEnabled(true);
+        btnDeletePayment.setEnabled(true);
+
+        int fila = tblPayments.rowAtPoint(evt.getPoint());
+
+        txtIdPayment.setText(tblPayments.getValueAt(fila, 0).toString());
+
+        payment = paymentCtrl.searchPayment(Integer.parseInt(txtIdPayment.getText()));
+//        System.out.println("pay " + payment);
+
+        txtIdRepPayment.setText(String.valueOf(payment.getIdRepair()));
+        jdDatePay.setDate(payment.getPaymentDate());
+        txtAmountPay.setText(String.valueOf(payment.getAmount()));
+        cbxPaymentMethod.setSelectedItem(payment.getPaymentMethod().toString());
+
     }//GEN-LAST:event_tblPaymentsMouseClicked
 
-    private void btnAmountPayKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAmountPayKeyTyped
+    private void txtAmountPayKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmountPayKeyTyped
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAmountPayKeyTyped
+    }//GEN-LAST:event_txtAmountPayKeyTyped
 
     private void txtNameClient1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameClient1KeyTyped
         // TODO add your handling code here:
@@ -1918,6 +1976,75 @@ public class FormMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteRepActionPerformed
 
+    private void btnSavePaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSavePaymentActionPerformed
+        if (!"".equals(txtIdRepPayment.getText()) && jdDatePay.getDate() != null
+                && !"".equals(txtAmountPay.getText())) {
+            payment.setIdRepair(Integer.parseInt(txtIdRepPayment.getText()));
+            payment.setPaymentDate(jdDatePay.getDate());
+            payment.setAmount(Double.parseDouble(txtAmountPay.getText()));
+            String selectedPaymentMethod = (String) cbxPaymentMethod.getSelectedItem();
+            Payment.PaymentMethod paymentMethod = Payment.PaymentMethod.fromString(selectedPaymentMethod);
+            payment.setPaymentMethod(paymentMethod);
+
+            paymentCtrl.addPayment(payment);
+            clearPayment();
+            paymentCtrl.listPayments(tblPayments);
+
+            btnSavePayment.setEnabled(true);
+            btnUpdatePayment.setEnabled(false);
+            btnDeletePayment.setEnabled(false);
+        } else {
+            msg.infoMessage("Por favor, rellena todos los campos", "Agregar Pago");
+        }
+    }//GEN-LAST:event_btnSavePaymentActionPerformed
+
+    private void btnUpdatePaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdatePaymentActionPerformed
+        if (!"".equals(txtIdRepPayment.getText()) && jdDatePay.getDate() != null
+                && !"".equals(txtAmountPay.getText())) {
+            payment.setIdRepair(Integer.parseInt(txtIdRepPayment.getText()));
+            payment.setPaymentDate(jdDatePay.getDate());
+            payment.setAmount(Double.parseDouble(txtAmountPay.getText()));
+            String selectedPaymentMethod = (String) cbxPaymentMethod.getSelectedItem();
+            Payment.PaymentMethod paymentMethod = Payment.PaymentMethod.fromString(selectedPaymentMethod);
+            payment.setPaymentMethod(paymentMethod);
+
+            paymentCtrl.updatePayment(payment);
+            clearPayment();
+            paymentCtrl.listPayments(tblPayments);
+
+            btnSavePayment.setEnabled(true);
+            btnUpdatePayment.setEnabled(false);
+            btnDeletePayment.setEnabled(false);
+        } else {
+            msg.infoMessage("Por favor, rellena todos los campos", "Agregar Pago");
+        }
+    }//GEN-LAST:event_btnUpdatePaymentActionPerformed
+
+    private void btnDeletePaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePaymentActionPerformed
+        if (!"".equals(txtIdPayment.getText())) {
+            boolean reply = msg.confirmMessage("¿Estás seguro que deseas eliminar este pago?, \n"
+                    + "esta acción es irreversible", "Eliminar Pago");
+            if (reply == true) {
+                paymentCtrl.deletePayment(Integer.parseInt(txtIdPayment.getText()));
+                clearPayment();
+                paymentCtrl.listPayments(tblPayments);
+
+                btnSavePayment.setEnabled(true);
+                btnUpdatePayment.setEnabled(false);
+                btnDeletePayment.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_btnDeletePaymentActionPerformed
+
+    private void clearPayment() {
+        String t = "";
+        txtIdRepPayment.setText(t);
+        txtIdPayment.setText(t);
+        jdDatePay.setDate(null);
+        txtAmountPay.setText(t);
+        fillPaymentMethods();
+    }
+
     private void clearRepair() {
         String t = "";
         fillStates();
@@ -1989,7 +2116,6 @@ public class FormMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField btnAmountPay;
     private javax.swing.JButton btnCleanClient;
     private javax.swing.JButton btnCleanDevice;
     private javax.swing.JButton btnCleanPayment;
@@ -2087,12 +2213,14 @@ public class FormMain extends javax.swing.JFrame {
     private javax.swing.JTable tblPayments;
     private javax.swing.JTable tblRepairs;
     private javax.swing.JTextArea txtAddressClient;
+    private javax.swing.JTextField txtAmountPay;
     private javax.swing.JTextField txtColorDev;
     private javax.swing.JTextField txtDevBrand;
     private javax.swing.JTextField txtIdClient;
     private javax.swing.JTextField txtIdClientDev;
     private javax.swing.JTextField txtIdDevRep;
     private javax.swing.JTextField txtIdDevice;
+    private javax.swing.JTextField txtIdPayment;
     private javax.swing.JTextField txtIdRepPayment;
     private javax.swing.JTextField txtIdRepair;
     private javax.swing.JTextField txtModelDevice;
