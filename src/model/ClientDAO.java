@@ -94,8 +94,12 @@ public class ClientDAO {
     }
 
     public boolean deleteClient(int id) {
+        // Sentencias SQL para eliminar en cascada
+        String deletePaymentsSQL = "DELETE FROM pagos WHERE id_reparacion IN (SELECT id_reparacion FROM reparaciones WHERE id_dispositivo IN (SELECT id_dispositivo FROM dispositivos WHERE id_cliente = ?))";
+        String deleteRepairsSQL = "DELETE FROM reparaciones WHERE id_dispositivo IN (SELECT id_dispositivo FROM dispositivos WHERE id_cliente = ?)";
         String deleteDevicesSQL = "DELETE FROM dispositivos WHERE id_cliente = ?";
         String deleteClientSQL = "DELETE FROM clientes WHERE id_cliente = ?";
+
         Connection con = null;
         PreparedStatement ps = null;
 
@@ -104,7 +108,19 @@ public class ClientDAO {
             // Crear transacción
             con.setAutoCommit(false);
 
-            // Eliminar dispositivos relacionados
+            // Eliminar pagos relacionados a las reparaciones de los dispositivos del cliente
+            ps = con.prepareStatement(deletePaymentsSQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+
+            // Eliminar reparaciones relacionadas a los dispositivos del cliente
+            ps = con.prepareStatement(deleteRepairsSQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+
+            // Eliminar dispositivos del cliente
             ps = con.prepareStatement(deleteDevicesSQL);
             ps.setInt(1, id);
             ps.executeUpdate();

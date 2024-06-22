@@ -108,4 +108,13 @@ public class RepairCtrl {
     public Repair searchRepair(int id) {
         return repairDAO.searchRepair(id);
     }
+
+    public int getDeviceIdByRepairId(int idRepair) {
+        return repairDAO.getDeviceIdByRepairId(idRepair);
+    }
+
+    public void pdfRepairDetails(int repairId, int clientId, String usuario) {
+        repairDAO.pdfRepairDetails(repairId, clientId, usuario);
+    }
+
 }

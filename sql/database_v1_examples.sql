@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `telefono` varchar(20) DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando datos para la tabla sis_gestion_rep.clientes: ~4 rows (aproximadamente)
 DELETE FROM `clientes`;
@@ -63,8 +63,25 @@ INSERT INTO `clientes` (`id_cliente`, `nombre`, `telefono`, `direccion`) VALUES
 	(1, 'Daniela Yamilet', '8979790832', 'Aviación, Ébano, SLP'),
 	(2, 'Cliente Frecuente', '8451001010', 'Boulevard Principal, Zona Centro'),
 	(3, 'Antonio Patoño', '4811018619', 'Av. Manuel C. Larraga #69, Col. Antonio J Bermudez'),
-	(10, 'Cliente de Prueba', '398238922', 'Ébano, SLP');
+	(12, 'Juan Pérez González', '8410923302', 'Ébano, SLP');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
+
+-- Volcando estructura para tabla sis_gestion_rep.config
+CREATE TABLE IF NOT EXISTS `config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) NOT NULL,
+  `telefono` varchar(15) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `mensaje` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Volcando datos para la tabla sis_gestion_rep.config: ~1 rows (aproximadamente)
+DELETE FROM `config`;
+/*!40000 ALTER TABLE `config` DISABLE KEYS */;
+INSERT INTO `config` (`id`, `nombre`, `telefono`, `direccion`, `mensaje`) VALUES
+	(1, 'Código En Desarrollo', '4811018619', 'Ébano, SLP', '¡Gracias por su preferencia!');
+/*!40000 ALTER TABLE `config` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sis_gestion_rep.dispositivos
 CREATE TABLE IF NOT EXISTS `dispositivos` (
@@ -81,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `dispositivos` (
   KEY `id_tipo_dispositivo` (`id_tipo_dispositivo`),
   CONSTRAINT `dispositivos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
   CONSTRAINT `dispositivos_ibfk_2` FOREIGN KEY (`id_tipo_dispositivo`) REFERENCES `tipos_dispositivos` (`id_tipo_dispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Volcando datos para la tabla sis_gestion_rep.dispositivos: ~5 rows (aproximadamente)
 DELETE FROM `dispositivos`;
@@ -90,8 +107,8 @@ INSERT INTO `dispositivos` (`id_dispositivo`, `id_cliente`, `id_tipo_dispositivo
 	(1, 1, 1, 'Samsung', 'Galaxy S21', 'SN123456', 'Negro', 'Pantalla rota'),
 	(2, 2, 2, 'Apple', 'iPad Pro', 'SN654321', 'Blanco', 'Problema con la batería'),
 	(3, 3, 3, 'HP', 'Pavilion', 'SN789012', 'Gris', 'No enciende'),
-	(7, 10, 2, 'Xiaomi', 'Pad 6', 'SN283020', 'Gris Oscuro', 'Bloqueo'),
-	(8, 3, 1, 'Apple', 'iPhone 12', 'SN29100', 'Coral', 'No funcionan los altavoces');
+	(8, 3, 1, 'Apple', 'iPhone 12', 'SN29100', 'Coral', 'No funcionan los altavoces'),
+	(10, 12, 3, 'Lenovo', 'Ideapad 3', 'SN984330', 'Negro', 'Pantalla azul');
 /*!40000 ALTER TABLE `dispositivos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sis_gestion_rep.pagos
@@ -104,25 +121,23 @@ CREATE TABLE IF NOT EXISTS `pagos` (
   PRIMARY KEY (`id_pago`),
   KEY `id_reparacion` (`id_reparacion`),
   CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`id_reparacion`) REFERENCES `reparaciones` (`id_reparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla sis_gestion_rep.pagos: ~13 rows (aproximadamente)
+-- Volcando datos para la tabla sis_gestion_rep.pagos: ~11 rows (aproximadamente)
 DELETE FROM `pagos`;
 /*!40000 ALTER TABLE `pagos` DISABLE KEYS */;
 INSERT INTO `pagos` (`id_pago`, `id_reparacion`, `monto`, `fecha_pago`, `metodo_pago`) VALUES
 	(1, 1, 100.00, '2024-06-05', 'Efectivo'),
 	(2, 1, 50.00, '2024-06-10', 'Transferencia'),
 	(3, 2, 100.00, '2024-06-09', 'Efectivo'),
-	(5, 5, 350.00, '2024-06-20', 'Efectivo'),
-	(7, 5, 400.00, '2024-06-20', 'Efectivo'),
 	(8, 6, 750.00, '2024-06-20', 'Transferencia'),
 	(10, 6, 150.00, '2024-06-20', 'Efectivo'),
 	(12, 6, 300.00, '2024-06-20', 'Efectivo'),
-	(14, 7, 50.00, '2023-06-20', 'Efectivo'),
 	(15, 2, 100.00, '2024-06-20', 'Efectivo'),
 	(16, 3, 150.00, '2024-06-20', 'Depósito'),
 	(17, 3, 150.00, '2024-06-20', 'Efectivo'),
-	(18, 5, 50.00, '2024-06-20', 'Efectivo');
+	(24, 9, 950.00, '2024-06-20', 'Transferencia'),
+	(25, 9, 300.00, '2024-06-21', 'Depósito');
 /*!40000 ALTER TABLE `pagos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sis_gestion_rep.reparaciones
@@ -138,18 +153,17 @@ CREATE TABLE IF NOT EXISTS `reparaciones` (
   PRIMARY KEY (`id_reparacion`),
   KEY `id_dispositivo` (`id_dispositivo`),
   CONSTRAINT `reparaciones_ibfk_1` FOREIGN KEY (`id_dispositivo`) REFERENCES `dispositivos` (`id_dispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Volcando datos para la tabla sis_gestion_rep.reparaciones: ~6 rows (aproximadamente)
+-- Volcando datos para la tabla sis_gestion_rep.reparaciones: ~5 rows (aproximadamente)
 DELETE FROM `reparaciones`;
 /*!40000 ALTER TABLE `reparaciones` DISABLE KEYS */;
 INSERT INTO `reparaciones` (`id_reparacion`, `id_dispositivo`, `servicio`, `costo`, `fecha_recepcion`, `fecha_entrega`, `estado`, `estado_pago`) VALUES
 	(1, 1, 'Reemplazo de pantalla', 150.00, '2024-06-01', '2024-06-10', 'Entregado', 'Pagado'),
 	(2, 2, 'Reemplazo de batería', 200.00, '2024-06-02', '2024-06-11', 'Entregado', 'Pagado'),
 	(3, 3, 'Reparación de placa madre', 300.00, '2024-06-03', '2024-06-20', 'Entregado', 'Pagado'),
-	(5, 7, 'Restauración', 800.00, '2024-06-20', NULL, 'Completado', 'Pagado'),
-	(6, 8, 'Limpieza y cambio de bocinas', 1200.00, '2024-06-20', NULL, 'Pendiente', 'Pagado'),
-	(7, 7, 'ty', 100.00, '2024-06-20', NULL, 'Pendiente', 'Pago Parcial');
+	(6, 8, 'Limpieza y cambio de bocinas', 1200.00, '2024-06-20', '2024-06-20', 'Entregado', 'Pagado'),
+	(9, 10, 'Cambio de almacenamiento + reinstalación', 1350.00, '2024-06-20', NULL, 'Completado', 'Pago Parcial');
 /*!40000 ALTER TABLE `reparaciones` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sis_gestion_rep.tipos_dispositivos

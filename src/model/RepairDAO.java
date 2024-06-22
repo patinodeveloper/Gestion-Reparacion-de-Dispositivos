@@ -5,6 +5,25 @@
  */
 package model;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.Desktop;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -199,21 +218,48 @@ public class RepairDAO {
     }
 
     public boolean deleteRepair(int id) {
-        String sql = "DELETE FROM reparaciones WHERE id_reparacion = ?";
+        String sqlDeletePayments = "DELETE FROM pagos WHERE id_reparacion = ?";
+        String sqlDeleteRepair = "DELETE FROM reparaciones WHERE id_reparacion = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+
         try {
             con = cn.getConnectDB();
-            ps = con.prepareStatement(sql);
+            con.setAutoCommit(false); // Desactiva el auto-commit para iniciar la transacción
+
+            // Eliminar pagos relacionados
+            ps = con.prepareStatement(sqlDeletePayments);
             ps.setInt(1, id);
-            ps.execute();
+            ps.executeUpdate();
+            ps.close();
+
+            // Eliminar reparación
+            ps = con.prepareStatement(sqlDeleteRepair);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+            con.commit(); // Realiza el commit de la transacción
             return true;
         } catch (SQLException e) {
+            try {
+                if (con != null) {
+                    con.rollback(); // Realiza el rollback en caso de error
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error al hacer rollback: " + ex.toString());
+            }
             System.out.println(e.toString());
             return false;
         } finally {
             try {
-                con.close();
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
-                System.out.println(ex.toString());
+                System.out.println("Error al cerrar conexión: " + ex.toString());
             }
         }
     }
@@ -262,6 +308,292 @@ public class RepairDAO {
             System.out.println(e.toString());
         }
         return rep;
+    }
+
+    public int getDeviceIdByRepairId(int idRepair) {
+        int deviceId = -1;
+        String query = "SELECT id_dispositivo FROM reparaciones WHERE id_reparacion = ?";
+
+        try {
+            con = cn.getConnectDB();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, idRepair);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                deviceId = rs.getInt("id_dispositivo");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener el ID del dispositivo: " + e.toString());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error al cerrar la conexión: " + ex.toString());
+            }
+        }
+        return deviceId;
+    }
+
+    public void pdfRepairDetails(int repairId, int clientId, String usuario) {
+        try {
+            Date date = new Date();
+            FileOutputStream archivo;
+            String url = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+            File salida = new File(url + "/reparacion_" + repairId + ".pdf");
+            archivo = new FileOutputStream(salida);
+            Document doc = new Document();
+            PdfWriter.getInstance(doc, archivo);
+            doc.open();
+
+            // logo
+            Image img = Image.getInstance(getClass().getResource("/resources/logo-128px.png"));
+            img.scaleToFit(100, 100);
+            img.setAlignment(Element.ALIGN_LEFT);
+//            doc.add(img);
+
+            // Crear tabla para los datos del vendedor y la empresa
+            PdfPTable headerTable = new PdfPTable(4);
+            headerTable.setWidthPercentage(100);
+            headerTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            float[] columnWidthsEncabezado = new float[]{20f, 30f, 70f, 40f};
+            headerTable.setWidths(columnWidthsEncabezado);
+            headerTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+            headerTable.addCell(img);
+            headerTable.addCell("");
+
+            // Obtener información de la configuración de la empresa
+            String configQuery = "SELECT nombre, telefono, direccion, mensaje FROM Config LIMIT 1";
+            String empresaNombre = "", empresaTelefono = "", empresaDireccion = "", empresaMensaje = "";
+
+            try {
+                con = cn.getConnectDB();
+                ps = con.prepareStatement(configQuery);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    empresaNombre = rs.getString("nombre");
+                    empresaTelefono = rs.getString("telefono");
+                    empresaDireccion = rs.getString("direccion");
+                    empresaMensaje = rs.getString("mensaje");
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al obtener la configuración de la empresa: " + e.toString());
+            }
+
+            // Datos de la empresa
+            Paragraph empresaInfo = new Paragraph();
+            empresaInfo.add("Nombre: " + empresaNombre + "\n");
+            empresaInfo.add("Teléfono: " + empresaTelefono + "\n");
+            empresaInfo.add("Dirección: " + empresaDireccion + "\n\n");
+            PdfPCell empresaCell = new PdfPCell(empresaInfo);
+            empresaCell.setBorder(Rectangle.NO_BORDER);
+            empresaCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            headerTable.addCell(empresaCell);
+
+            // Datos del usuario
+            Paragraph vendedorInfo = new Paragraph();
+            vendedorInfo.add("Usuario: " + usuario + "\n");
+            vendedorInfo.add("Folio de Reparación: " + repairId + "\n");
+            vendedorInfo.add("Fecha: " + new SimpleDateFormat("dd/MM/yyyy").format(date) + "\n\n");
+            PdfPCell vendedorCell = new PdfPCell(vendedorInfo);
+            vendedorCell.setBorder(Rectangle.NO_BORDER);
+            vendedorCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            headerTable.addCell(vendedorCell);
+
+            doc.add(headerTable);
+
+            // Información del cliente
+            Paragraph clienteInfo = new Paragraph("DATOS DEL CLIENTE\n\n", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLUE));
+            doc.add(clienteInfo);
+
+            PdfPTable clienteTabla = new PdfPTable(3);
+            clienteTabla.setWidthPercentage(100);
+            float[] columnWidthsCliente = new float[]{50f, 25f, 25f};
+            clienteTabla.setWidths(columnWidthsCliente);
+            clienteTabla.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            // Encabezados de cliente
+            Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(255, 140, 0)); // Naranja suave
+            PdfPCell cellClienteHeader = new PdfPCell(new Phrase("Nombre", headerFont));
+            cellClienteHeader.setBorder(Rectangle.BOX);
+            cellClienteHeader.setBackgroundColor(new BaseColor(255, 228, 181)); // Naranja claro
+            clienteTabla.addCell(cellClienteHeader);
+
+            cellClienteHeader = new PdfPCell(new Phrase("Teléfono", headerFont));
+            cellClienteHeader.setBorder(Rectangle.BOX);
+            cellClienteHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+            clienteTabla.addCell(cellClienteHeader);
+
+            cellClienteHeader = new PdfPCell(new Phrase("Dirección", headerFont));
+            cellClienteHeader.setBorder(Rectangle.BOX);
+            cellClienteHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+            clienteTabla.addCell(cellClienteHeader);
+
+            String clienteQuery = "SELECT nombre, telefono, direccion FROM clientes WHERE id_cliente = ?";
+            try {
+                ps = con.prepareStatement(clienteQuery);
+                ps.setInt(1, clientId);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    clienteTabla.addCell(rs.getString("nombre"));
+                    clienteTabla.addCell(rs.getString("telefono"));
+                    clienteTabla.addCell(rs.getString("direccion") + "\n\n");
+                }
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+            doc.add(clienteTabla);
+
+            // Información de la reparación
+            Paragraph reparacionInfo = new Paragraph("DETALLES DE LA REPARACIÓN\n\n", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLUE));
+            doc.add(reparacionInfo);
+
+            String reparacionQuery = "SELECT r.id_reparacion, td.tipo AS dispositivo, d.problema, r.servicio, r.costo, "
+                    + "r.fecha_recepcion, r.fecha_entrega, r.estado, r.estado_pago "
+                    + "FROM reparaciones r "
+                    + "JOIN dispositivos d ON r.id_dispositivo = d.id_dispositivo "
+                    + "JOIN tipos_dispositivos td ON d.id_tipo_dispositivo = td.id_tipo_dispositivo "
+                    + "WHERE r.id_reparacion = ?";
+
+            PdfPTable reparacionTabla = new PdfPTable(2);
+            reparacionTabla.setWidthPercentage(100);
+            float[] columnWidthsReparacion = new float[]{30f, 70f};
+            reparacionTabla.setWidths(columnWidthsReparacion);
+            reparacionTabla.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            try {
+                ps = con.prepareStatement(reparacionQuery);
+                ps.setInt(1, repairId);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    PdfPCell cellHeader;
+
+                    cellHeader = new PdfPCell(new Phrase("Dispositivo", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell(rs.getString("dispositivo"));
+
+                    cellHeader = new PdfPCell(new Phrase("Problema", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell(rs.getString("problema"));
+
+                    cellHeader = new PdfPCell(new Phrase("Servicio", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell(rs.getString("servicio"));
+
+                    cellHeader = new PdfPCell(new Phrase("Costo", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell("$" + rs.getDouble("costo"));
+
+                    cellHeader = new PdfPCell(new Phrase("Fecha Recepción", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell(new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("fecha_recepcion")));
+
+                    cellHeader = new PdfPCell(new Phrase("Fecha Entrega", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    Date fechaEntrega = rs.getDate("fecha_entrega");
+                    if (fechaEntrega != null) {
+                        reparacionTabla.addCell(new SimpleDateFormat("dd/MM/yyyy").format(fechaEntrega));
+                    } else {
+                        reparacionTabla.addCell("No especificada");
+                    }
+
+                    cellHeader = new PdfPCell(new Phrase("Estado", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell(rs.getString("estado"));
+
+                    cellHeader = new PdfPCell(new Phrase("Estado Pago", headerFont));
+                    cellHeader.setBorder(Rectangle.BOX);
+                    cellHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+                    reparacionTabla.addCell(cellHeader);
+                    reparacionTabla.addCell(rs.getString("estado_pago"));
+                }
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+            doc.add(reparacionTabla);
+
+            // Tabla de pagos
+            Paragraph pagosInfo = new Paragraph("HISTORIAL DE PAGOS\n\n", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLUE));
+            doc.add(pagosInfo);
+
+            PdfPTable pagosTabla = new PdfPTable(3);
+            pagosTabla.setWidthPercentage(100);
+            float[] columnWidthsPagos = new float[]{30f, 40f, 30f};
+            pagosTabla.setWidths(columnWidthsPagos);
+            pagosTabla.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            PdfPCell cellPagosHeader;
+
+            cellPagosHeader = new PdfPCell(new Phrase("Fecha de Pago", headerFont));
+            cellPagosHeader.setBorder(Rectangle.BOX);
+            cellPagosHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+            pagosTabla.addCell(cellPagosHeader);
+
+            cellPagosHeader = new PdfPCell(new Phrase("Método de Pago", headerFont));
+            cellPagosHeader.setBorder(Rectangle.BOX);
+            cellPagosHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+            pagosTabla.addCell(cellPagosHeader);
+
+            cellPagosHeader = new PdfPCell(new Phrase("Monto", headerFont));
+            cellPagosHeader.setBorder(Rectangle.BOX);
+            cellPagosHeader.setBackgroundColor(new BaseColor(255, 228, 181));
+            pagosTabla.addCell(cellPagosHeader);
+
+            double totalPagado = 0.0;
+
+            String pagosQuery = "SELECT fecha_pago, metodo_pago, monto FROM pagos WHERE id_reparacion = ?";
+            try {
+                ps = con.prepareStatement(pagosQuery);
+                ps.setInt(1, repairId);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    pagosTabla.addCell(new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("fecha_pago")));
+                    pagosTabla.addCell(rs.getString("metodo_pago"));
+                    double monto = rs.getDouble("monto");
+                    pagosTabla.addCell("$" + monto);
+                    totalPagado += monto;
+                }
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+            doc.add(pagosTabla);
+
+            // Mostrar el total pagado
+            Paragraph totalPagadoInfo = new Paragraph();
+            totalPagadoInfo.add(Chunk.NEWLINE);
+            totalPagadoInfo.add(new Phrase("Total Pagado: $" + totalPagado, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD, BaseColor.RED)));
+            totalPagadoInfo.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(totalPagadoInfo);
+
+            // Mensaje de agradecimiento al final del documento
+            Paragraph agradecimiento = new Paragraph();
+            agradecimiento.add(Chunk.NEWLINE);
+            agradecimiento.add("Gracias por su preferencia\n");
+            agradecimiento.setAlignment(Element.ALIGN_CENTER);
+            doc.add(agradecimiento);
+
+            doc.close();
+            archivo.close();
+            Desktop.getDesktop().open(salida);
+        } catch (DocumentException | IOException e) {
+            System.out.println(e.toString());
+        }
     }
 
 }

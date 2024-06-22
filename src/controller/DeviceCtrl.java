@@ -83,4 +83,8 @@ public class DeviceCtrl {
         }
     }
 
+    public int getClientIdByDeviceId(int deviceId) {
+        return deviceDAO.getClientIdByDeviceId(deviceId);
+    }
+
 }
